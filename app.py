@@ -93,9 +93,13 @@ def load_products():
 # Initialize DashScope client
 def get_client():
     return OpenAI(
-        api_key=st.session_state.get("api_key", ""),
-        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+        api_key=st.session_state.get("api_key", os.getenv("DASHSCOPE_API_KEY", "")),
+        base_url=os.getenv("DASHSCOPE_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1")
     )
+
+# Get model name
+def get_model():
+    return os.getenv("LLM_MODEL", "qwen3.7-plus")
 
 # System prompt for menu analysis
 SYSTEM_PROMPT = """你是一位专业的Kraft Heinz中国(KHC)餐饮销售顾问AI助手。
@@ -204,7 +208,7 @@ KHC产品目录：
 请按照系统提示中的JSON格式返回分析结果。"""
 
     response = client.chat.completions.create(
-        model="qwen3.7-plus",
+        model=get_model(),
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {
@@ -249,7 +253,7 @@ KHC产品目录：
 请按照系统提示中的JSON格式返回分析结果。"""
 
     response = client.chat.completions.create(
-        model="qwen3.7-plus",
+        model=get_model(),
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt}
@@ -378,20 +382,31 @@ def main():
     if env_api_key and "api_key" not in st.session_state:
         st.session_state["api_key"] = env_api_key
     
-    # Sidebar for API key
+    # Sidebar for configuration
     with st.sidebar:
         st.header("⚙️ 配置")
+        
+        # API Key input
         api_key = st.text_input(
             "DashScope API Key",
-            value=st.session_state.get("api_key", ""),
+            value=st.session_state.get("api_key", env_api_key),
             type="password",
-            help="输入你的阿里云DashScope API Key（已从.env文件加载）"
+            help="输入你的阿里云DashScope API Key"
         )
         if api_key:
             st.session_state["api_key"] = api_key
         
         if env_api_key:
             st.success("✅ 已从.env文件加载API Key")
+        
+        # Show current config
+        st.markdown(f"""
+        <div style="background: #f0f2f6; padding: 10px; border-radius: 5px; font-size: 12px;">
+            <b>当前配置:</b><br>
+            模型: {get_model()}<br>
+            API: {os.getenv('DASHSCOPE_BASE_URL', 'N/A')[:30]}...
+        </div>
+        """, unsafe_allow_html=True)
         
         st.divider()
         st.header("📦 KHC产品目录")
