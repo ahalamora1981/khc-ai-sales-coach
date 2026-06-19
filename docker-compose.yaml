@@ -1,6 +1,10 @@
 services:
   ai-sales-coach:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: khc-ai-sales-coach
+    restart: unless-stopped
     ports:
       - "8501:8501"
     environment:
@@ -9,5 +13,4 @@ services:
       - LLM_MODEL=${LLM_MODEL:-qwen3.5-flash}
     volumes:
       - ./:/app
-      - ./.env:/app/.env
-    restart: unless-stopped
+      - ./.env:/app/.env:ro
