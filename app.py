@@ -1,6 +1,6 @@
 """
 AI Sales Coach Demo - Menu Analyzer
-Kraft Heinz China (KHC) Foodservice Solution
+Kxxxx Hxxxx Foodservice Solution
 """
 
 import streamlit as st
@@ -16,7 +16,7 @@ load_dotenv()
 
 # Page config
 st.set_page_config(
-    page_title="KHC AI Sales Coach - Menu Analyzer",
+    page_title="AI Sales Coach - Menu Analyzer",
     page_icon="🍳",
     layout="wide"
 )
@@ -102,11 +102,11 @@ def get_model():
     return os.getenv("LLM_MODEL", "qwen3.5-flash")
 
 # System prompt for menu analysis
-SYSTEM_PROMPT = """你是一位专业的Kraft Heinz中国(KHC)餐饮销售顾问AI助手。
+SYSTEM_PROMPT = """你是一位专业的餐饮销售顾问AI助手。
 
-你的任务是分析餐厅菜单，并基于KHC的产品组合提供专业的酱料推荐。
+你的任务是分析餐厅菜单，并基于公司的产品组合提供专业的酱料推荐。
 
-KHC中国的主要产品品牌和类别包括：
+公司主要产品品牌和类别包括：
 1. 味事达 (MasterFoods) - 中式酱料
    - 酱油系列：味极鲜、生抽、老抽、蒸鱼豉油、零添加系列
    - 蚝油系列：经典蚝油、素蚝油
@@ -123,9 +123,9 @@ KHC中国的主要产品品牌和类别包括：
 
 请分析菜单并提供：
 1. 菜单分析（菜系类型、菜品数量、口味特征）
-2. 推荐3-5款最适合的KHC产品，说明推荐理由
+2. 推荐3-5款最适合的产品，说明推荐理由
 3. 每款产品如何应用到具体菜品中
-4. 1-2个创新建议（使用KHC产品创造新菜品）
+4. 1-2个创新建议（使用公司产品创造新菜品）
 
 输出格式要求：
 - 使用中文
@@ -200,9 +200,9 @@ def analyze_menu_image(image_path, client, products_json):
         for p in products_json["products"]
     ])
     
-    user_prompt = f"""请分析这张餐厅菜单图片，并提供KHC产品推荐。
+    user_prompt = f"""请分析这张餐厅菜单图片，并提供产品推荐。
 
-KHC产品目录：
+产品目录：
 {product_summary}
 
 请按照系统提示中的JSON格式返回分析结果。"""
@@ -242,12 +242,12 @@ def analyze_menu_text(menu_text, client, products_json):
         for p in products_json["products"]
     ])
     
-    user_prompt = f"""请分析以下餐厅菜单，并提供KHC产品推荐。
+    user_prompt = f"""请分析以下餐厅菜单，并提供产品推荐。
 
 菜单内容：
 {menu_text}
 
-KHC产品目录：
+产品目录：
 {product_summary}
 
 请按照系统提示中的JSON格式返回分析结果。"""
@@ -327,7 +327,7 @@ def display_results(analysis, full_response):
     st.divider()
     
     # Recommendations Section
-    st.markdown('<div class="recommendation-header">🎯 KHC产品推荐</div>', unsafe_allow_html=True)
+    st.markdown('<div class="recommendation-header">🎯 产品推荐</div>', unsafe_allow_html=True)
     
     recommendations = analysis.get("recommendations", [])
     for i, rec in enumerate(recommendations, 1):
@@ -369,8 +369,8 @@ def main():
     # Header
     st.markdown("""
     <div class="main-header">
-        <h1>🍳 KHC AI Sales Coach - 菜单分析器</h1>
-        <p>Kraft Heinz China 餐饮销售智能助手 | Powered by Qwen 3.7 Plus</p>
+        <h1>🍳 AI Sales Coach - 菜单分析器</h1>
+        <p>餐饮销售智能助手 | Powered by Qwen 3.7 Plus</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -409,7 +409,7 @@ def main():
         """, unsafe_allow_html=True)
         
         st.divider()
-        st.header("📦 KHC产品目录")
+        st.header("📦 产品目录")
         st.markdown(f"共 **{len(products['products'])}** 款产品")
         
         # Show product categories
@@ -548,7 +548,7 @@ def main():
     st.divider()
     st.markdown("""
     <div style="text-align: center; color: #666;">
-        <p>Kraft Heinz China AI Sales Coach Demo | Powered by Qwen 3.7 Plus | Built with ❤️ by Infosys</p>
+        <p>AI Sales Coach Demo | Powered by Qwen 3.7 Plus | Built with ❤️ by Infoxxx</p>
     </div>
     """, unsafe_allow_html=True)
 

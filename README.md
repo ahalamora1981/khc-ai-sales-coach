@@ -1,13 +1,13 @@
-# KHC AI Sales Coach Demo
+# AI Sales Coach Demo
 
-Kraft Heinz China 餐饮销售智能助手演示应用
+餐饮销售智能助手演示应用
 
 ## 功能特性
 
 - 📷 **图片菜单分析** - 上传菜单图片，AI自动识别并分析
 - 📝 **文本菜单分析** - 输入菜单文本，AI进行智能分析
-- 🎯 **产品推荐** - 基于菜单特点推荐最适合的KHC产品
-- 💡 **创新建议** - 提供使用KHC产品的创新菜品建议
+- 🎯 **产品推荐** - 基于菜单特点推荐最适合的产品
+- 💡 **创新建议** - 提供使用公司产品的创新菜品建议
 - 🗣️ **销售话术** - 生成针对该餐厅的销售话术要点
 
 ## 技术栈
@@ -60,9 +60,9 @@ uv run streamlit run app.py
 - 009_sichuan_restaurant.txt - 川味坊
 - 010_japanese_restaurant.txt - 樱花屋日本料理
 
-## KHC产品目录
+## 产品目录
 
-本Demo包含以下KHC中国产品：
+本Demo包含以下产品：
 
 ### 味事达 (MasterFoods)
 - 味极鲜特级酿造酱油
@@ -93,7 +93,7 @@ uv run streamlit run app.py
 ai-sales-coach-demo/
 ├── app.py                  # 主应用文件
 ├── data/
-│   └── khc_products.json   # KHC产品目录
+│   └── khc_products.json   # 产品目录
 ├── sample-menus/           # 示例菜单
 │   ├── *.jpg               # 图片菜单
 │   └── *.txt               # 文本菜单
@@ -109,5 +109,5 @@ ai-sales-coach-demo/
 
 ## 开发团队
 
-Kraft Heinz China AI Sales Coach Project  
-Powered by Infosys
+AI Sales Coach Project  
+Powered by Infoxxx
