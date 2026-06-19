@@ -1,0 +1,27 @@
+# 默认站点（通过 IP 直接访问时显示）
+:80 {
+    root * /usr/share/caddy
+    file_server
+}
+
+# 主站点 — 自动 HTTPS
+johnnytao.com.cn {
+    # 高中合格考项目
+    handle_path /high-school-exam/* {
+        root * /home/projects/高中合格考/high-school-exam
+        file_server
+        encode gzip
+    }
+
+    # AI Sales Coach — 使用 handle_path 去掉前缀
+    handle_path /ai-sales-coach/* {
+        reverse_proxy localhost:8501 {
+            header_up X-Forwarded-Proto https
+            header_up X-Forwarded-Host johnnytao.com.cn
+            header_up X-Forwarded-Port 443
+        }
+    }
+
+    # 根路径重定向
+    redir / /high-school-exam/ 301
+}
