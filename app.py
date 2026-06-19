@@ -99,7 +99,7 @@ def get_client():
 
 # Get model name
 def get_model():
-    return os.getenv("LLM_MODEL", "qwen3.7-plus")
+    return os.getenv("LLM_MODEL", "qwen3.5-flash")
 
 # System prompt for menu analysis
 SYSTEM_PROMPT = """你是一位专业的Kraft Heinz中国(KHC)餐饮销售顾问AI助手。
