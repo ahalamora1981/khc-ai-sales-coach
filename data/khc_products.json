@@ -1,0 +1,412 @@
+{
+  "products": [
+    {
+      "id": "KHC-SS-001",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Premium Soy Sauce",
+      "name_cn": "味事达味极鲜特级酿造酱油",
+      "category": "酱油 Soy Sauce",
+      "subcategory": "生抽 Light Soy Sauce",
+      "taste_profile": {
+        "salty": 7,
+        "umami": 9,
+        "sweet": 2,
+        "savory": 8
+      },
+      "applications": ["炒菜 Stir-fry", "凉拌 Cold dishes", "蘸料 Dipping", "蒸鱼 Steamed fish"],
+      "key_benefits": [
+        "First press extraction for rich flavor",
+        "Non-GMO soybeans",
+        "No artificial additives",
+        "Enhances natural umami"
+      ],
+      "competitor": "海天味极鲜",
+      "suggested_dishes": ["炒蔬菜", "凉拌菜", "蒸鱼", "白切鸡蘸料"],
+      "price_range": "¥12-18/500ml"
+    },
+    {
+      "id": "KHC-SS-002",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Steamed Fish Soy Sauce",
+      "name_cn": "味事达蒸鱼豉油",
+      "category": "酱油 Soy Sauce",
+      "subcategory": "蒸鱼豉油 Steamed Fish Soy Sauce",
+      "taste_profile": {
+        "salty": 6,
+        "umami": 9,
+        "sweet": 4,
+        "savory": 8
+      },
+      "applications": ["蒸鱼 Steamed fish", "海鲜 Seafood", "蘸料 Dipping"],
+      "key_benefits": [
+        "Specially formulated for seafood",
+        "Light and delicate flavor",
+        "Enhances natural sweetness of fish",
+        "Professional chef choice"
+      ],
+      "competitor": "李锦记蒸鱼豉油",
+      "suggested_dishes": ["清蒸鱼", "蒸虾", "白灼海鲜"],
+      "price_range": "¥15-20/500ml"
+    },
+    {
+      "id": "KHC-SS-003",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Zero Additive Light Soy Sauce",
+      "name_cn": "味事达零添加初榨生抽",
+      "category": "酱油 Soy Sauce",
+      "subcategory": "零添加 Zero Additive",
+      "taste_profile": {
+        "salty": 6,
+        "umami": 8,
+        "sweet": 2,
+        "savory": 7
+      },
+      "applications": ["炒菜 Stir-fry", "凉拌 Cold dishes", "健康烹饪 Healthy cooking"],
+      "key_benefits": [
+        "Zero additives - clean label",
+        "First press extraction",
+        "Health-conscious consumers",
+        "Premium positioning"
+      ],
+      "competitor": "海天零添加",
+      "suggested_dishes": ["健康沙拉", "轻食料理", "儿童餐"],
+      "price_range": "¥18-25/500ml"
+    },
+    {
+      "id": "KHC-SS-004",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Dark Soy Sauce",
+      "name_cn": "味事达老抽",
+      "category": "酱油 Soy Sauce",
+      "subcategory": "老抽 Dark Soy Sauce",
+      "taste_profile": {
+        "salty": 6,
+        "umami": 7,
+        "sweet": 3,
+        "savory": 7
+      },
+      "applications": ["红烧 Braising", "卤水 Master stock", "上色 Coloring"],
+      "key_benefits": [
+        "Rich dark color for appetizing appearance",
+        "Thick consistency for coating",
+        "Ideal for braised dishes",
+        "Enhances visual appeal"
+      ],
+      "competitor": "海天老抽",
+      "suggested_dishes": ["红烧肉", "卤鸡翅", "红烧排骨"],
+      "price_range": "¥10-15/500ml"
+    },
+    {
+      "id": "KHC-OS-001",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Premium Oyster Sauce",
+      "name_cn": "味事达蚝油",
+      "category": "蚝油 Oyster Sauce",
+      "subcategory": "经典蚝油 Classic",
+      "taste_profile": {
+        "salty": 5,
+        "umami": 9,
+        "sweet": 4,
+        "savory": 8
+      },
+      "applications": ["炒菜 Stir-fry", "腌制 Marinade", "蘸料 Dipping", "淋汁 Drizzle"],
+      "key_benefits": [
+        "Real oyster extract",
+        "Rich umami flavor",
+        "Versatile applications",
+        "Enhances any dish"
+      ],
+      "competitor": "海天蚝油",
+      "suggested_dishes": ["蚝油生菜", "蚝油牛肉", "炒青菜", "火锅蘸料"],
+      "price_range": "¥12-18/500ml"
+    },
+    {
+      "id": "KHC-OS-002",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Vegetarian Oyster Sauce",
+      "name_cn": "味事达素蚝油",
+      "category": "蚝油 Oyster Sauce",
+      "subcategory": "素蚝油 Vegetarian",
+      "taste_profile": {
+        "salty": 5,
+        "umami": 8,
+        "sweet": 4,
+        "savory": 7
+      },
+      "applications": ["素食 Vegetarian", "炒菜 Stir-fry", "蘸料 Dipping"],
+      "key_benefits": [
+        "100% plant-based",
+        "Mushroom extract for umami",
+        "Suitable for vegetarians/vegans",
+        "Halal certified"
+      ],
+      "competitor": "李锦记素蚝油",
+      "suggested_dishes": ["素食炒菜", "凉拌豆腐", "素蚝油生菜"],
+      "price_range": "¥14-20/500ml"
+    },
+    {
+      "id": "KHC-CS-001",
+      "brand": "味事达 MasterFoods",
+      "name_en": "MasterFoods Bean Chili Sauce",
+      "name_cn": "味事达豆豉辣椒酱",
+      "category": "辣椒酱 Chili Sauce",
+      "subcategory": "豆豉辣椒酱 Fermented Bean Chili",
+      "taste_profile": {
+        "spicy": 7,
+        "salty": 6,
+        "umami": 7,
+        "savory": 8
+      },
+      "applications": ["炒菜 Stir-fry", "拌面 Noodle topping", "蘸料 Dipping", "火锅 Hotpot"],
+      "key_benefits": [
+        "Fermented black beans for depth",
+        "Balanced heat level",
+        "Authentic Sichuan flavor",
+        "Versatile condiment"
+      ],
+      "competitor": "老干妈",
+      "suggested_dishes": ["豆豉炒肉", "拌面", "火锅蘸料", "炒青菜"],
+      "price_range": "¥10-15/280g"
+    },
+    {
+      "id": "KHC-CS-002",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Chili Sauce",
+      "name_cn": "亨氏辣椒酱",
+      "category": "辣椒酱 Chili Sauce",
+      "subcategory": "西式辣椒酱 Western Style",
+      "taste_profile": {
+        "spicy": 5,
+        "salty": 5,
+        "sweet": 4,
+        "savory": 6
+      },
+      "applications": ["蘸料 Dipping", "汉堡 Burgers", "烧烤 BBQ", "西餐 Western food"],
+      "key_benefits": [
+        "Global brand quality",
+        "Mild to medium heat",
+        "Western-style flavor profile",
+        "Consistent quality"
+      ],
+      "competitor": "味好美辣椒酱",
+      "suggested_dishes": ["汉堡", "薯条蘸酱", "烧烤", "热狗"],
+      "price_range": "¥8-12/350g"
+    },
+    {
+      "id": "KHC-TK-001",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Tomato Ketchup",
+      "name_cn": "亨氏番茄沙司",
+      "category": "番茄酱 Tomato Ketchup",
+      "subcategory": "经典番茄沙司 Classic",
+      "taste_profile": {
+        "sweet": 6,
+        "sour": 5,
+        "salty": 4,
+        "savory": 5
+      },
+      "applications": ["蘸料 Dipping", "汉堡 Burgers", "薯条 Fries", "意面 Pasta"],
+      "key_benefits": [
+        "#1 global ketchup brand",
+        "Made with real tomatoes",
+        "No artificial colors/preservatives",
+        "Trusted quality worldwide"
+      ],
+      "competitor": "味好美番茄酱",
+      "suggested_dishes": ["薯条", "汉堡", "意面", "炸鸡"],
+      "price_range": "¥8-12/340g"
+    },
+    {
+      "id": "KHC-TK-002",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Zero Sugar Tomato Ketchup",
+      "name_cn": "亨氏0蔗糖番茄沙司",
+      "category": "番茄酱 Tomato Ketchup",
+      "subcategory": "健康系列 Health Series",
+      "taste_profile": {
+        "sweet": 2,
+        "sour": 5,
+        "salty": 4,
+        "savory": 5
+      },
+      "applications": ["健康饮食 Healthy eating", "低糖 Low sugar", "蘸料 Dipping"],
+      "key_benefits": [
+        "Zero added sugar",
+        "Same great taste",
+        "Health-conscious option",
+        "Suitable for diabetics"
+      ],
+      "competitor": "味好美0糖番茄酱",
+      "suggested_dishes": ["健康餐", "轻食", "儿童餐"],
+      "price_range": "¥12-18/340g"
+    },
+    {
+      "id": "KHC-MM-001",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Mayonnaise",
+      "name_cn": "亨氏蛋黄酱",
+      "category": "蛋黄酱 Mayonnaise",
+      "subcategory": "经典蛋黄酱 Classic",
+      "taste_profile": {
+        "creamy": 9,
+        "savory": 6,
+        "tangy": 5,
+        "rich": 8
+      },
+      "applications": ["沙拉 Salad", "三明治 Sandwich", "蘸料 Dipping", "烘焙 Baking"],
+      "key_benefits": [
+        "Creamy texture",
+        "Made with real eggs",
+        "Versatile applications",
+        "Global quality standard"
+      ],
+      "competitor": "丘比蛋黄酱",
+      "suggested_dishes": ["沙拉", "三明治", "汉堡", "炸虾蘸酱"],
+      "price_range": "¥12-18/300g"
+    },
+    {
+      "id": "KHC-SD-001",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Sesame Salad Dressing",
+      "name_cn": "亨氏焙煎芝麻沙拉酱",
+      "category": "沙拉酱 Salad Dressing",
+      "subcategory": "芝麻酱 Sesame",
+      "taste_profile": {
+        "nutty": 8,
+        "savory": 7,
+        "sweet": 3,
+        "creamy": 6
+      },
+      "applications": ["沙拉 Salad", "凉面 Cold noodles", "蘸料 Dipping", "日式料理 Japanese food"],
+      "key_benefits": [
+        "Toasted sesame aroma",
+        "Japanese-style flavor",
+        "Versatile dressing",
+        "Light and healthy"
+      ],
+      "competitor": "丘比芝麻酱",
+      "suggested_dishes": ["凉拌菜", "沙拉", "冷面", "火锅蘸料"],
+      "price_range": "¥15-22/350ml"
+    },
+    {
+      "id": "KHC-SD-002",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Vinaigrette",
+      "name_cn": "亨氏油醋汁",
+      "category": "沙拉酱 Salad Dressing",
+      "subcategory": "油醋汁 Vinaigrette",
+      "taste_profile": {
+        "tangy": 8,
+        "light": 9,
+        "savory": 5,
+        "sweet": 2
+      },
+      "applications": ["沙拉 Salad", "轻食 Light meals", "健康饮食 Healthy eating"],
+      "key_benefits": [
+        "0 fat option available",
+        "Low calorie",
+        "Refreshing taste",
+        "Health-conscious choice"
+      ],
+      "competitor": "百利油醋汁",
+      "suggested_dishes": ["蔬菜沙拉", "鸡胸肉沙拉", "轻食餐"],
+      "price_range": "¥18-25/350ml"
+    },
+    {
+      "id": "KHC-FT-001",
+      "brand": "广合 Guanghe",
+      "name_en": "Guanghe Fermented Bean Curd",
+      "name_cn": "广合腐乳",
+      "category": "腐乳 Fermented Tofu",
+      "subcategory": "白腐乳 White",
+      "taste_profile": {
+        "salty": 7,
+        "umami": 8,
+        "savory": 9,
+        "creamy": 6
+      },
+      "applications": ["佐餐 Side dish", "蘸料 Dipping", "炒菜 Stir-fry"],
+      "key_benefits": [
+        "Traditional fermentation",
+        "Rich in protein",
+        "Smooth texture",
+        "Classic Cantonese flavor"
+      ],
+      "competitor": "王致和腐乳",
+      "suggested_dishes": ["配粥", "火锅蘸料", "炒空心菜"],
+      "price_range": "¥8-12/瓶"
+    },
+    {
+      "id": "KHC-FT-002",
+      "brand": "广合 Guanghe",
+      "name_en": "Guanghe Sesame Oil",
+      "name_cn": "广合芝麻油",
+      "category": "芝麻油 Sesame Oil",
+      "subcategory": "小磨香油 Stone-ground",
+      "taste_profile": {
+        "nutty": 9,
+        "aromatic": 9,
+        "savory": 7,
+        "rich": 8
+      },
+      "applications": ["凉拌 Cold dishes", "调味 Seasoning", "蘸料 Dipping", "汤类 Soups"],
+      "key_benefits": [
+        "Traditional stone-ground method",
+        "Pure sesame aroma",
+        "A little goes a long way",
+        "Premium quality"
+      ],
+      "competitor": "鲁花芝麻油",
+      "suggested_dishes": ["凉拌菜", "馄饨汤", "火锅蘸料", "拌面"],
+      "price_range": "¥18-28/250ml"
+    },
+    {
+      "id": "KHC-CW-001",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz Teriyaki Sauce",
+      "name_cn": "亨氏照烧酱",
+      "category": "复合调味酱 Compound Sauce",
+      "subcategory": "照烧酱 Teriyaki",
+      "taste_profile": {
+        "sweet": 7,
+        "savory": 7,
+        "umami": 6,
+        "salty": 5
+      },
+      "applications": ["烧烤 Grilling", "照烧 Teriyaki", "腌制 Marinade", "日式料理 Japanese food"],
+      "key_benefits": [
+        "Authentic Japanese flavor",
+        "Ready to use",
+        "Caramelizes beautifully",
+        "Versatile glaze"
+      ],
+      "competitor": "味好美照烧酱",
+      "suggested_dishes": ["照烧鸡排", "照烧三文鱼", "照烧牛肉"],
+      "price_range": "¥15-22/340g"
+    },
+    {
+      "id": "KHC-CW-002",
+      "brand": "亨氏 Heinz",
+      "name_en": "Heinz BBQ Sauce",
+      "name_cn": "亨氏烧烤酱",
+      "category": "复合调味酱 Compound Sauce",
+      "subcategory": "烧烤酱 BBQ",
+      "taste_profile": {
+        "smoky": 7,
+        "sweet": 6,
+        "tangy": 5,
+        "savory": 6
+      },
+      "applications": ["烧烤 BBQ", "腌制 Marinade", "蘸料 Dipping", "烤肉 Grilled meat"],
+      "key_benefits": [
+        "Smoky American flavor",
+        "Perfect for grilling",
+        "Pre-made convenience",
+        "Consistent results"
+      ],
+      "competitor": "味好美烧烤酱",
+      "suggested_dishes": ["烤鸡翅", "烤排骨", "汉堡"],
+      "price_range": "¥15-22/340g"
+    }
+  ]
+}

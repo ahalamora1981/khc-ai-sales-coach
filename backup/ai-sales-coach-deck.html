@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Sales Coach — KHC China | Infosys</title>
+
+    <!-- ===========================================
+         FONTS: Source Serif 4 (opsz) + JetBrains Mono
+         =========================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           THEME — Editorial Forest Custom Properties
+           Change these to customize the deck
+           =========================================== */
+        :root {
+            --green: #2e4a2a;
+            --green-deep: #243a21;
+            --green-lite: #3a5a36;
+            --pink: #e89cb1;
+            --pink-deep: #d27e96;
+            --cream: #efe7d4;
+            --cream-2: #e6dcc4;
+            --ink: #1a1a17;
+
+            --font-serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+            --slide-pad-x: 120px;
+            --slide-pad-y: 96px;
+            --slide-pad-statement-y: 130px;
+            --slide-pad-statement-x: 160px;
+
+            --radius-card: 6px;
+            --radius-card-step: 8px;
+            --rule-weight: 2px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-reveal: 0.7s;
+        }
+
+        /* ===========================================
+           RESET
+           =========================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ===========================================
+           VIEWPORT-BASE.CSS — MANDATORY FIXED STAGE
+           =========================================== */
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #1a1a17);
+        }
+
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #1a1a17);
+        }
+
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--cream);
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--cream);
+        }
+
+        .slide.active,
+        .slide.visible {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+        }
+
+        img, video, canvas, svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .deck-controls {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        @media print {
+            html, body {
+                width: 1920px;
+                height: auto;
+                overflow: visible;
+                background: #fff;
+            }
+            .deck-viewport {
+                position: static;
+                overflow: visible;
+                background: #fff;
+            }
+            .deck-stage {
+                position: static;
+                width: auto;
+                height: auto;
+                transform: none !important;
+                background: none;
+            }
+            .slide {
+                position: relative;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                width: 1920px;
+                height: 1080px;
+                break-after: page;
+                page-break-after: always;
+            }
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+            .deck-controls {
+                display: none !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+
+        /* ===========================================
+           EDITORIAL FOREST — DESIGN SYSTEM
+           =========================================== */
+
+        /* --- Surfaces --- */
+        .slide-surface-cream {
+            background: var(--cream);
+        }
+        .slide-surface-green {
+            background: var(--green);
+        }
+        .slide-surface-pink {
+            background: var(--pink);
+        }
+
+        /* --- Typography: Serif Display --- */
+        .display-hero {
+            font-family: var(--font-serif);
+            font-size: 220px;
+            font-weight: 500;
+            line-height: 0.92;
+            letter-spacing: -0.02em;
+        }
+        .display {
+            font-family: var(--font-serif);
+            font-size: 140px;
+            font-weight: 500;
+            line-height: 1.02;
+            letter-spacing: -0.02em;
+        }
+        .headline-xl {
+            font-family: var(--font-serif);
+            font-size: 96px;
+            font-weight: 500;
+            line-height: 0.96;
+            letter-spacing: -0.02em;
+        }
+        .headline {
+            font-family: var(--font-serif);
+            font-size: 84px;
+            font-weight: 500;
+            line-height: 1.0;
+            letter-spacing: -0.02em;
+        }
+        .headline-sm {
+            font-family: var(--font-serif);
+            font-size: 80px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.02em;
+        }
+        .title-card-lg {
+            font-family: var(--font-serif);
+            font-size: 84px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.01em;
+        }
+        .title-card {
+            font-family: var(--font-serif);
+            font-size: 68px;
+            font-weight: 500;
+            line-height: 0.96;
+            letter-spacing: -0.01em;
+        }
+        .title-card-sm {
+            font-family: var(--font-serif);
+            font-size: 56px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.01em;
+        }
+        .stat-figure {
+            font-family: var(--font-serif);
+            font-size: 220px;
+            font-weight: 500;
+            line-height: 0.92;
+            letter-spacing: -0.03em;
+        }
+        .stat-figure-unit {
+            font-family: var(--font-serif);
+            font-size: 110px;
+            font-weight: 500;
+            line-height: 0.92;
+        }
+        .name-lg {
+            font-family: var(--font-serif);
+            font-size: 44px;
+            font-weight: 600;
+            line-height: 1.0;
+        }
+
+        /* --- Typography: Serif Body --- */
+        .body-lg {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.32;
+        }
+        .body {
+            font-family: var(--font-serif);
+            font-size: 30px;
+            font-weight: 400;
+            line-height: 1.38;
+        }
+        .body-card {
+            font-family: var(--font-serif);
+            font-size: 26px;
+            font-weight: 400;
+            line-height: 1.34;
+        }
+        .figure-caption-serif {
+            font-family: var(--font-serif);
+            font-size: 56px;
+            font-weight: 500;
+            line-height: 1.05;
+        }
+        .meta-value {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        /* --- Typography: Mono Chrome --- */
+        .label {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+        .label-tight {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .caption-mono {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .axis-mono {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* --- Text Colors by Surface --- */
+        .text-green { color: var(--green); }
+        .text-green-deep { color: var(--green-deep); }
+        .text-cream { color: var(--cream); }
+        .text-pink { color: var(--pink); }
+        .text-ink { color: var(--ink); }
+
+        /* --- Chrome Components --- */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: var(--slide-pad-y) var(--slide-pad-x) 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+        }
+        .topbar.label-on-green .label { color: var(--pink); }
+        .topbar.label-on-cream .label { color: var(--green); }
+        .topbar.label-on-pink .label { color: var(--green-deep); }
+
+        .monogram-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 2px solid var(--pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--pink);
+            flex-shrink: 0;
+        }
+        .monogram-circle.on-cream { border-color: var(--pink); color: var(--pink); }
+        .monogram-circle.on-green { border-color: var(--pink); color: var(--pink); }
+        .monogram-circle.on-pink { border-color: var(--green-deep); color: var(--green-deep); }
+
+        .footline {
+            position: absolute;
+            bottom: 60px;
+            left: var(--slide-pad-x);
+            right: var(--slide-pad-x);
+            display: flex;
+            justify-content: space-between;
+            z-index: 2;
+        }
+        .footline.on-green .caption-mono { color: var(--cream); }
+        .footline.on-cream .caption-mono { color: var(--green); }
+        .footline.on-pink .caption-mono { color: var(--green-deep); }
+
+        /* --- Slide Content Regions --- */
+        .slide-content {
+            position: absolute;
+            inset: 0;
+            padding: var(--slide-pad-y) var(--slide-pad-x);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide-content.statement-pad {
+            padding: var(--slide-pad-statement-y) var(--slide-pad-statement-x);
+        }
+        .slide-content.narrow-pad {
+            padding: 100px 120px;
+        }
+        .slide-content.wide-pad {
+            padding: 100px 140px;
+        }
+
+        /* --- Hairline Rules --- */
+        .rule {
+            height: var(--rule-weight);
+            width: 100%;
+            background: currentColor;
+            border: none;
+        }
+        .rule-green { background: var(--green); }
+        .rule-pink { background: var(--pink); }
+        .rule-green-deep { background: var(--green-deep); }
+        .rule-cream { background: var(--cream); }
+
+        /* --- Cards / Tiles --- */
+        .topic-tile {
+            border-radius: var(--radius-card);
+            padding: 40px 40px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .topic-tile.fill-green {
+            background: var(--green);
+        }
+        .topic-tile.fill-green .body-card { color: var(--cream); }
+        .topic-tile.fill-green .caption-mono { color: var(--pink); }
+        .topic-tile.fill-green .title-card-sm { color: var(--cream); }
+        .topic-tile.fill-green .text-card { color: var(--cream); }
+
+        .topic-tile.fill-pink {
+            background: var(--pink);
+        }
+        .topic-tile.fill-pink .body-card { color: var(--green-deep); }
+        .topic-tile.fill-pink .caption-mono { color: var(--green-deep); }
+        .topic-tile.fill-pink .title-card-sm { color: var(--green-deep); }
+        .topic-tile.fill-pink .text-card { color: var(--green-deep); }
+
+        .topic-tile.fill-green-lite {
+            background: var(--green-lite);
+        }
+        .topic-tile.fill-green-lite .body-card { color: var(--cream); }
+        .topic-tile.fill-green-lite .caption-mono { color: var(--pink); }
+        .topic-tile.fill-green-lite .title-card-sm { color: var(--cream); }
+        .topic-tile.fill-green-lite .text-card { color: var(--cream); }
+
+        .topic-tile.fill-cream-border {
+            background: var(--cream-2);
+            border: var(--rule-weight) solid var(--green);
+        }
+        .topic-tile.fill-cream-border .body-card { color: var(--ink); }
+        .topic-tile.fill-cream-border .caption-mono { color: var(--green); }
+        .topic-tile.fill-cream-border .title-card-sm { color: var(--green); }
+        .topic-tile.fill-cream-border .text-card { color: var(--ink); }
+
+        .step-tile {
+            border-radius: var(--radius-card-step);
+            padding: 40px 32px 32px;
+            border: 2.5px solid;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 470px;
+        }
+        .step-tile.border-cream-green {
+            background: var(--cream-2);
+            border-color: var(--green);
+        }
+        .step-tile.border-cream-green .body-card { color: var(--ink); }
+        .step-tile.border-cream-green .title-card { color: var(--green); }
+        .step-tile.border-cream-green .caption-mono { color: var(--green); }
+
+        .step-tile.fill-green {
+            background: var(--green);
+            border-color: var(--pink);
+        }
+        .step-tile.fill-green .body-card { color: var(--cream); }
+        .step-tile.fill-green .title-card { color: var(--cream); }
+        .step-tile.fill-green .caption-mono { color: var(--pink); }
+
+        .step-tile.fill-pink {
+            background: var(--pink);
+            border-color: var(--pink-deep);
+        }
+        .step-tile.fill-pink .body-card { color: var(--green-deep); }
+        .step-tile.fill-pink .title-card { color: var(--green-deep); }
+        .step-tile.fill-pink .caption-mono { color: var(--green-deep); }
+
+        /* --- KPI Block --- */
+        .kpi-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+        .kpi-block .stat-figure { color: var(--cream); }
+        .kpi-block .caption-mono { color: var(--pink); }
+        .kpi-block .body-lg { color: var(--cream); }
+
+        /* --- Grid Helpers --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 28px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 28px;
+        }
+        .grid-2-wide {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .gap-8 { gap: 8px; }
+        .gap-12 { gap: 12px; }
+        .gap-16 { gap: 16px; }
+        .gap-20 { gap: 20px; }
+        .gap-24 { gap: 24px; }
+        .gap-28 { gap: 28px; }
+        .gap-32 { gap: 32px; }
+        .gap-40 { gap: 40px; }
+        .gap-60 { gap: 60px; }
+        .mt-auto { margin-top: auto; }
+        .mb-auto { margin-bottom: auto; }
+        .items-start { align-items: flex-start; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .w-full { width: 100%; }
+
+        /* --- Meta Definition List --- */
+        .meta-dl {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 36px;
+            border-top: var(--rule-weight) solid var(--green);
+            padding-top: 28px;
+        }
+        .meta-dl.on-green { border-top-color: var(--pink); }
+        .meta-dl.on-green .caption-mono { color: var(--pink); }
+        .meta-dl.on-green .meta-value { color: var(--cream); }
+        .meta-dl.on-cream { border-top-color: var(--green); }
+        .meta-dl.on-cream .caption-mono { color: var(--green); }
+        .meta-dl.on-cream .meta-value { color: var(--ink); }
+
+        .meta-dl dt {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .meta-dl dd {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        /* --- Chart Bar (for visual stats) --- */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 40px;
+            height: 400px;
+            padding: 0 20px;
+        }
+        .bar {
+            width: 56px;
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .bar .bar-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            position: absolute;
+            bottom: calc(100% + 12px);
+            white-space: nowrap;
+        }
+        .bar .bar-label {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 16px;
+            text-align: center;
+        }
+        .bar.fill-pink { background: var(--pink); }
+        .bar.fill-cream { background: var(--cream); }
+        .bar.fill-green { background: var(--green); }
+        .bar.fill-green-lite { background: var(--green-lite); }
+
+        /* --- Legend Swatch --- */
+        .legend-swatch {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* --- Spacing overrides --- */
+        .pt-0 { padding-top: 0; }
+        .pb-0 { padding-bottom: 0; }
+
+        /* ===========================================
+           ANIMATIONS — Editorial / Magazine Style
+           Gentle staggered reveals, fade + slide up
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity var(--duration-reveal) var(--ease-out),
+                        transform var(--duration-reveal) var(--ease-out);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide.visible .reveal-stagger-1 { transition-delay: 0.05s; }
+        .slide.visible .reveal-stagger-2 { transition-delay: 0.12s; }
+        .slide.visible .reveal-stagger-3 { transition-delay: 0.19s; }
+        .slide.visible .reveal-stagger-4 { transition-delay: 0.26s; }
+        .slide.visible .reveal-stagger-5 { transition-delay: 0.33s; }
+        .slide.visible .reveal-stagger-6 { transition-delay: 0.40s; }
+        .slide.visible .reveal-stagger-7 { transition-delay: 0.47s; }
+        .slide.visible .reveal-stagger-8 { transition-delay: 0.54s; }
+        .slide.visible .reveal-stagger-9 { transition-delay: 0.61s; }
+        .slide.visible .reveal-stagger-10 { transition-delay: 0.68s; }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity var(--duration-reveal) var(--ease-out),
+                        transform var(--duration-reveal) var(--ease-out);
+        }
+        .slide.visible .reveal-left {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .slide.visible .reveal-left:nth-child(1) { transition-delay: 0.05s; }
+        .slide.visible .reveal-left:nth-child(2) { transition-delay: 0.12s; }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.97);
+            transition: opacity 0.7s var(--ease-out),
+                        transform 0.7s var(--ease-out);
+        }
+        .slide.visible .reveal-scale {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ===========================================
+           INLINE EDITING — JS-controlled hover reveal
+           =========================================== */
+        .edit-hotzone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            z-index: 10000;
+            cursor: pointer;
+        }
+        .edit-toggle {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 10001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            background: var(--green);
+            color: var(--cream);
+            border: 2px solid var(--pink);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .edit-toggle.show,
+        .edit-toggle.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .edit-toggle:hover {
+            background: var(--green-deep);
+        }
+
+        /* Edit mode cursor */
+        .edit-mode-active [contenteditable="true"] {
+            cursor: text;
+            outline: 2px dashed var(--pink);
+            outline-offset: 4px;
+            border-radius: 2px;
+            padding: 2px 4px;
+            transition: outline-color 0.2s;
+        }
+        .edit-mode-active [contenteditable="true"]:hover {
+            outline-color: var(--green-lite);
+        }
+        .edit-mode-active [contenteditable="true"]:focus {
+            outline: 2px solid var(--green);
+            outline-offset: 4px;
+        }
+
+        /* ===========================================
+           PAGE INDICATOR
+           =========================================== */
+        .page-indicator {
+            position: fixed;
+            bottom: 28px;
+            right: 32px;
+            z-index: 999;
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: var(--cream);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           SLIDE-SPECIFIC STYLES
+           =========================================== */
+
+        /* --- Cover Slide --- */
+        .slide-cover .cover-main {
+            position: absolute;
+            bottom: 200px;
+            left: var(--slide-pad-statement-x);
+            right: var(--slide-pad-statement-x);
+        }
+        .slide-cover .cover-sub {
+            position: absolute;
+            bottom: 100px;
+            left: var(--slide-pad-statement-x);
+            right: var(--slide-pad-statement-x);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        /* --- Statement / Quote Slide --- */
+        .statement-content {
+            position: absolute;
+            inset: 0;
+            padding: var(--slide-pad-statement-y) var(--slide-pad-statement-x);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 40px;
+        }
+        .statement-content .display {
+            max-width: 1400px;
+        }
+
+        /* --- Two-column layout --- */
+        .two-col {
+            position: absolute;
+            inset: 0;
+            padding: 100px 120px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        /* --- KPI Row --- */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        /* --- Section slide divider --- */
+        .section-marker {
+            position: absolute;
+            top: var(--slide-pad-y);
+            left: var(--slide-pad-x);
+            z-index: 2;
+        }
+
+        /* --- Bullet lists --- */
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .bullet-list li {
+            position: relative;
+            padding-left: 28px;
+        }
+        .bullet-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--pink);
+        }
+        .bullet-list.on-cream li::before { background: var(--pink); }
+        .bullet-list.on-green li::before { background: var(--pink); }
+        .bullet-list.on-green li { color: var(--cream); }
+        .bullet-list.on-pink li::before { background: var(--green-deep); }
+        .bullet-list.on-pink li { color: var(--green-deep); }
+
+        /* --- Workflow arrow --- */
+        .workflow-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .workflow-step {
+            background: var(--cream-2);
+            border: var(--rule-weight) solid var(--green);
+            border-radius: var(--radius-card);
+            padding: 20px 28px;
+            text-align: center;
+            min-width: 160px;
+        }
+        .workflow-step .label-tight { color: var(--green); font-size: 18px; }
+        .workflow-arrow {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            color: var(--pink);
+            font-weight: 500;
+        }
+
+        /* --- Comparison table --- */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .compare-table th {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 12px 16px 8px 0;
+            border-bottom: var(--rule-weight) solid var(--green);
+            color: var(--green);
+        }
+        .compare-table td {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 400;
+            padding: 10px 16px 10px 0;
+            border-bottom: 1px solid var(--cream-2);
+            color: var(--ink);
+        }
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        .compare-table .highlight {
+            font-weight: 500;
+            color: var(--green);
+        }
+
+        /* ===========================================
+           RESPONSIVE FALLBACK FOR EXTREME VIEWPORTS
+           Non-slide UI only — not for slide content
+           =========================================== */
+        @media (max-width: 768px) {
+            .page-indicator {
+                font-size: 12px;
+                bottom: 16px;
+                right: 16px;
+            }
+            .deck-controls {
+                gap: 10px;
+            }
+            .deck-controls button {
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===========================================
+         DECK VIEWPORT
+         =========================================== -->
+    <div class="deck-viewport">
+        <main class="deck-stage" id="deckStage">
+
+            <!-- ===========================================
+                 SLIDE 1: COVER — AI Sales Coach
+                 Green surface, hero display
+                 =========================================== -->
+            <section class="slide slide-cover slide-surface-green active" data-slide="1">
+                <div class="topbar label-on-green">
+                    <span class="label">Infosys · KHC China</span>
+                    <div class="monogram-circle on-green">IS</div>
+                </div>
+
+                <div class="cover-main">
+                    <p class="label reveal reveal-stagger-1" style="color: var(--pink); margin-bottom: 20px;">Solution Proposal · Draft v0.1</p>
+                    <h1 class="display-hero reveal reveal-stagger-2" style="color: var(--cream);">
+                        AI-Powered<br>Sales Coach
+                    </h1>
+                    <p class="display reveal reveal-stagger-3" style="color: var(--pink); font-size: 84px; line-height: 1.0;">
+                        Kraft Heinz China
+                    </p>
+                </div>
+
+                <div class="footline on-green">
+                    <span class="caption-mono">KHC-CN-AI-SOL-001</span>
+                    <span class="caption-mono">18 June 2026</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 2: EXECUTIVE SUMMARY
+                 Cream surface, headline + body + key stats
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="2">
+                <div class="topbar label-on-cream">
+                    <span class="label">Executive Summary</span>
+                    <span class="caption-mono" style="color: var(--green);">01 / 16</span>
+                </div>
+
+                <div class="slide-content" style="justify-content: center; gap: 40px;">
+                    <div>
+                        <h2 class="headline-xl reveal reveal-stagger-1" style="color: var(--green);">
+                            Empowering the Field<br>Sales Team
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 120px; margin-top: 28px;"></div>
+                    </div>
+
+                    <p class="body-lg reveal reveal-stagger-2" style="color: var(--ink); max-width: 1600px;">
+                        Kraft Heinz China seeks to develop an <strong style="font-weight: 500;">AI-Powered Sales Coach Chatbot</strong>
+                        to empower its field sales team in the foodservice sauce category — an intelligent, always-available
+                        assistant that helps representatives learn product knowledge, receive personalized coaching, and
+                        make data-driven product recommendations based on restaurant menu analysis.
+                    </p>
+
+                    <div class="kpi-row reveal reveal-stagger-3">
+                        <div class="kpi-block" style="background: var(--green); border-radius: var(--radius-card); padding: 32px 24px;">
+                            <span class="caption-mono" style="color: var(--pink);">Product Knowledge</span>
+                            <span class="stat-figure" style="font-size: 120px; line-height: 0.9; color: var(--cream);">30<span class="stat-figure-unit" style="font-size: 60px;">%</span></span>
+                            <span class="body-card" style="color: var(--cream);">Improvement in product knowledge</span>
+                        </div>
+                        <div class="kpi-block" style="background: var(--pink); border-radius: var(--radius-card); padding: 32px 24px;">
+                            <span class="caption-mono" style="color: var(--green-deep);">Revenue Impact</span>
+                            <span class="stat-figure" style="font-size: 120px; line-height: 0.9; color: var(--green-deep);">20<span class="stat-figure-unit" style="font-size: 60px;">%</span></span>
+                            <span class="body-card" style="color: var(--green-deep);">Increase in sauce category revenue per rep</span>
+                        </div>
+                        <div class="kpi-block" style="background: var(--green-lite); border-radius: var(--radius-card); padding: 32px 24px;">
+                            <span class="caption-mono" style="color: var(--pink);">Ramp-Up Time</span>
+                            <span class="stat-figure" style="font-size: 120px; line-height: 0.9; color: var(--cream);">50<span class="stat-figure-unit" style="font-size: 60px;">%</span></span>
+                            <span class="body-card" style="color: var(--cream);">Reduction in new hire ramp-up time</span>
+                        </div>
+                        <div class="kpi-block" style="background: var(--cream-2); border: var(--rule-weight) solid var(--green); border-radius: var(--radius-card); padding: 32px 24px;">
+                            <span class="caption-mono" style="color: var(--green);">Adoption</span>
+                            <span class="stat-figure" style="font-size: 120px; line-height: 0.9; color: var(--green);">80<span class="stat-figure-unit" style="font-size: 60px;">%</span></span>
+                            <span class="body-card" style="color: var(--ink);">Monthly active usage among field team</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 3: THE CHALLENGE
+                 Cream surface, two-column
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="3">
+                <div class="topbar label-on-cream">
+                    <span class="label">The Challenge</span>
+                    <span class="caption-mono" style="color: var(--green);">02 / 16</span>
+                </div>
+
+                <div class="two-col">
+                    <div class="flex-col gap-28">
+                        <h2 class="headline-xl reveal reveal-stagger-1" style="color: var(--green);">
+                            A Strategic<br>Gap
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 80px;"></div>
+                        <p class="body reveal reveal-stagger-2" style="color: var(--ink);">
+                            KHC is a global leader in ketchup, but aims to become a leader in the
+                            <strong style="font-weight: 500;">Chinese sauce market</strong>. The field sales team needs
+                            better tools to compete against local giants like Haitian and Lee Kum Kee.
+                        </p>
+                        <p class="body reveal reveal-stagger-3" style="color: var(--ink);">
+                            China's condiment market: <strong style="font-weight: 500;">¥4,981 billion (2024)</strong>,
+                            growing at 7.0% CAGR. Compound seasonings — KHC's growth area — are growing at 10.2% CAGR.
+                        </p>
+                    </div>
+
+                    <div class="flex-col gap-24 reveal reveal-stagger-4">
+                        <div class="topic-tile fill-green">
+                            <span class="caption-mono" style="color: var(--pink);">Requirement 01</span>
+                            <span class="title-card-sm" style="color: var(--cream);">Sales Coaching</span>
+                            <p class="body-card" style="color: var(--cream);">"I want an AI chatbot to teach me how to sell KHC sauce to restaurants."</p>
+                        </div>
+                        <div class="topic-tile fill-pink">
+                            <span class="caption-mono" style="color: var(--green-deep);">Requirement 02</span>
+                            <span class="title-card-sm" style="color: var(--green-deep);">Self-Learning &amp; Menu Recommendation</span>
+                            <p class="body-card" style="color: var(--green-deep);">"AI that has self-learning and recommends menu to me."</p>
+                        </div>
+                        <div class="topic-tile fill-green-lite">
+                            <span class="caption-mono" style="color: var(--pink);">Requirement 03</span>
+                            <span class="title-card-sm" style="color: var(--cream);">Product Recommendation</span>
+                            <p class="body-card" style="color: var(--cream);">"Input the menu; AI recommends KHC sauce for taste and innovation."</p>
+                        </div>
+                        <div class="topic-tile fill-cream-border">
+                            <span class="caption-mono" style="color: var(--green);">Requirement 04</span>
+                            <span class="title-card-sm" style="color: var(--green);">Mobile Learning Coach</span>
+                            <p class="body-card" style="color: var(--ink);">"I want to use my phone to learn... Just like a coach beside me."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">KHC China Foodservice · Field Sales</span>
+                    <span class="caption-mono">Slide 03</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 4: SOLUTION OVERVIEW — Statement slide
+                 Green surface, statement moment
+                 =========================================== -->
+            <section class="slide slide-surface-green" data-slide="4">
+                <div class="topbar label-on-green">
+                    <span class="label">Solution Overview</span>
+                    <div class="monogram-circle on-green">IS</div>
+                </div>
+
+                <div class="statement-content">
+                    <span class="caption-mono reveal reveal-stagger-1" style="color: var(--pink); letter-spacing: 0.2em;">The Vision</span>
+                    <p class="display reveal reveal-stagger-2" style="color: var(--cream); font-size: 120px; line-height: 1.0;">
+                        An intelligent, always-available<br>
+                        <span style="color: var(--pink);">assistant</span> that helps sales reps
+                    </p>
+                    <p class="headline reveal reveal-stagger-3" style="color: var(--cream); font-weight: 400; font-size: 64px; line-height: 1.2; max-width: 1200px;">
+                        Learn, prepare, and execute customer interactions<br>
+                        with confidence — on their phone, anytime.
+                    </p>
+                </div>
+
+                <div class="footline on-green">
+                    <span class="caption-mono">Personalized · Contextual · Evolving</span>
+                    <span class="caption-mono">Slide 04</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 5: CORE INNOVATION — Personal Memory
+                 Cream surface, architecture overview
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="5">
+                <div class="topbar label-on-cream">
+                    <span class="label">Core Innovation</span>
+                    <span class="caption-mono" style="color: var(--green);">03 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 32px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green); letter-spacing: 0.16em;">The Differentiator</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            Personal Memory<br>Architecture
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <p class="body-lg reveal reveal-stagger-3" style="color: var(--ink); max-width: 1600px;">
+                        Not a generic AI chatbot — <strong style="font-weight: 500;">YOUR AI coach</strong>.
+                        Each user has a dedicated memory that records their experience, preferences,
+                        and learning outcomes, dynamically retrieved and updated with every interaction.
+                    </p>
+
+                    <!-- Memory Architecture Grid -->
+                    <div class="grid-3 reveal reveal-stagger-4" style="margin-top: 8px;">
+                        <div class="step-tile border-cream-green" style="min-height: 360px;">
+                            <span class="caption-mono" style="color: var(--green);">01 · Extraction</span>
+                            <span class="title-card-sm" style="color: var(--green); font-size: 44px; line-height: 1.0;">Learn from<br>Every Interaction</span>
+                            <div class="rule" style="background: var(--green);"></div>
+                            <ul class="bullet-list" style="padding-left: 0;">
+                                <li class="body-card">What products did the user ask about?</li>
+                                <li class="body-card">What recommendations were accepted?</li>
+                                <li class="body-card">What learning modules were completed?</li>
+                                <li class="body-card">What customer feedback was received?</li>
+                            </ul>
+                        </div>
+                        <div class="step-tile fill-green" style="min-height: 360px;">
+                            <span class="caption-mono" style="color: var(--pink);">02 · Store</span>
+                            <span class="title-card-sm" style="color: var(--cream); font-size: 44px; line-height: 1.0;">Six Memory<br>Dimensions</span>
+                            <div class="rule" style="background: var(--pink);"></div>
+                            <div class="flex-col gap-8">
+                                <span class="body-card" style="color: var(--cream);">Product Preferences</span>
+                                <span class="body-card" style="color: var(--cream);">Learning Progress</span>
+                                <span class="body-card" style="color: var(--cream);">Success Patterns</span>
+                                <span class="body-card" style="color: var(--cream);">Customer Feedback</span>
+                                <span class="body-card" style="color: var(--cream);">Weakness Areas</span>
+                                <span class="body-card" style="color: var(--cream);">Context History</span>
+                            </div>
+                        </div>
+                        <div class="step-tile fill-pink" style="min-height: 360px;">
+                            <span class="caption-mono" style="color: var(--green-deep);">03 · Evolve</span>
+                            <span class="title-card-sm" style="color: var(--green-deep); font-size: 44px; line-height: 1.0;">Continuous<br>Evolution</span>
+                            <div class="rule" style="background: var(--green-deep);"></div>
+                            <ul class="bullet-list" style="padding-left: 0;">
+                                <li class="body-card" style="color: var(--green-deep);">Old patterns updated with new data</li>
+                                <li class="body-card" style="color: var(--green-deep);">Confidence scores adjust based on outcomes</li>
+                                <li class="body-card" style="color: var(--green-deep);">Irrelevant memories decay over time</li>
+                                <li class="body-card" style="color: var(--green-deep);">New insights incorporated continuously</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">Why It Matters</span>
+                    <span class="caption-mono">Slide 05</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 6: INNOVATION — Menu Analysis
+                 Cream surface with workflow
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="6">
+                <div class="topbar label-on-cream">
+                    <span class="label">Innovation</span>
+                    <span class="caption-mono" style="color: var(--green);">04 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 32px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green);">Intelligence</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            Intelligent Menu<br>Analysis
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="grid-2 reveal reveal-stagger-3" style="gap: 48px;">
+                        <div class="flex-col gap-20">
+                            <p class="body-lg" style="color: var(--ink);">
+                                Photo recognition + OCR + taste profile analysis — not just
+                                <em style="font-weight: 500;">"what products to use"</em> but
+                                <strong style="font-weight: 500;">"why they fit this menu"</strong>,
+                                with innovation suggestions for new menu items.
+                            </p>
+
+                            <div class="workflow-row" style="margin-top: 12px;">
+                                <span class="caption-mono" style="color: var(--green); font-size: 16px;">Photo</span>
+                                <span class="workflow-arrow">→</span>
+                                <span class="caption-mono" style="color: var(--green); font-size: 16px;">OCR</span>
+                                <span class="workflow-arrow">→</span>
+                                <span class="caption-mono" style="color: var(--green); font-size: 16px;">Dish Recognition</span>
+                                <span class="workflow-arrow">→</span>
+                                <span class="caption-mono" style="color: var(--green); font-size: 16px;">Taste Analysis</span>
+                                <span class="workflow-arrow">→</span>
+                                <span class="caption-mono" style="color: var(--green); font-size: 16px;">KHC Match</span>
+                            </div>
+
+                            <div class="topic-tile fill-cream-border" style="margin-top: 8px;">
+                                <span class="caption-mono" style="color: var(--green);">Real-World Example</span>
+                                <p class="body-card" style="color: var(--ink);">
+                                    "I've analysed this Sichuan-style restaurant menu. Taste Profile: Spicy (7/10),
+                                    Numbing (8/10), Savory (6/10). Recommendation: KHC Chili Garlic Sauce —
+                                    perfect for enhancing Mapo Tofu's heat profile while adding depth."
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex-col gap-20">
+                            <div class="topic-tile fill-green">
+                                <span class="caption-mono" style="color: var(--pink);">Innovation Suggestion</span>
+                                <span class="title-card-sm" style="color: var(--cream);">Fusion Mapo Tofu</span>
+                                <p class="body-card" style="color: var(--cream);">
+                                    Suggest a 'Fusion Mapo Tofu' using our Chili Garlic Sauce + a touch of Italian herbs.
+                                    This differentiation could attract younger diners while maintaining authenticity.
+                                    Similar restaurants saw a <strong style="font-weight: 500;">20% increase</strong>
+                                    in average ticket size.
+                                </p>
+                            </div>
+                            <div class="topic-tile fill-pink">
+                                <span class="caption-mono" style="color: var(--green-deep);">Two Modes</span>
+                                <span class="title-card-sm" style="color: var(--green-deep);">Capture or Type</span>
+                                <p class="body-card" style="color: var(--green-deep);">
+                                    Primary: Photo-based menu recognition using the phone camera.<br>
+                                    Secondary: Manual text input as a reliable fallback.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">KHC Product Match + Innovation</span>
+                    <span class="caption-mono">Slide 06</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 7: PREDICTIVE COACHING
+                 Green surface, emphasis
+                 =========================================== -->
+            <section class="slide slide-surface-green" data-slide="7">
+                <div class="topbar label-on-green">
+                    <span class="label">Innovation</span>
+                    <div class="monogram-circle on-green">PC</div>
+                </div>
+
+                <div class="statement-content" style="text-align: left; align-items: flex-start;">
+                    <span class="caption-mono reveal reveal-stagger-1" style="color: var(--pink); letter-spacing: 0.2em;">Predictive Intelligence</span>
+                    <p class="display reveal reveal-stagger-2" style="color: var(--cream); font-size: 120px; line-height: 1.0; max-width: 1400px;">
+                        Predictive<br>Coaching
+                    </p>
+                    <p class="headline reveal reveal-stagger-3" style="color: var(--cream); font-weight: 400; font-size: 52px; line-height: 1.2; max-width: 1200px;">
+                        AI proactively identifies knowledge gaps before sales visits<br>
+                        and pushes relevant content based on upcoming customer context.
+                    </p>
+
+                    <div class="grid-2 reveal reveal-stagger-4" style="margin-top: 20px; gap: 28px; width: 100%;">
+                        <div class="topic-tile" style="background: var(--green-lite); border-radius: var(--radius-card); padding: 28px 32px;">
+                            <span class="caption-mono" style="color: var(--pink);">Example</span>
+                            <p class="body-card" style="color: var(--cream);">
+                                "You're visiting a Sichuan hotpot chain tomorrow. Based on your memory,
+                                you haven't worked with spicy sauce applications much. Here's a 5-minute
+                                briefing on our chili-based products and three successful case studies
+                                from similar restaurants."
+                            </p>
+                        </div>
+                        <div class="topic-tile" style="background: var(--cream-2); border: var(--rule-weight) solid var(--pink); border-radius: var(--radius-card); padding: 28px 32px;">
+                            <span class="caption-mono" style="color: var(--green);">How It Works</span>
+                            <ul class="bullet-list" style="padding-left: 0;">
+                                <li class="body-card" style="color: var(--ink);">Calendar/visit schedule analysed</li>
+                                <li class="body-card" style="color: var(--ink);">Memory checked for knowledge gaps</li>
+                                <li class="body-card" style="color: var(--ink);">Relevant content identified from KB</li>
+                                <li class="body-card" style="color: var(--ink);">Personalised coaching brief generated</li>
+                                <li class="body-card" style="color: var(--ink);">Push notification sent before visit</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-green">
+                    <span class="caption-mono">Proactive Preparation · Contextual Learning</span>
+                    <span class="caption-mono">Slide 07</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 8: MORE INNOVATIONS — Success Patterns + Contextual Learning
+                 Cream surface, two columns
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="8">
+                <div class="topbar label-on-cream">
+                    <span class="label">Innovations</span>
+                    <span class="caption-mono" style="color: var(--green);">05 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 28px;">
+                    <h2 class="headline-xl reveal reveal-stagger-1" style="color: var(--green);">
+                        More Innovation<br>Highlights
+                    </h2>
+                    <div class="rule" style="background: var(--pink); width: 100px;"></div>
+
+                    <div class="grid-2 reveal reveal-stagger-2" style="gap: 28px; margin-top: 8px;">
+                        <div class="step-tile fill-green" style="min-height: 420px;">
+                            <span class="caption-mono" style="color: var(--pink);">Innovation 04</span>
+                            <span class="title-card" style="color: var(--cream); font-size: 56px;">Success Pattern<br>Mining</span>
+                            <div class="rule" style="background: var(--pink);"></div>
+                            <p class="body-card" style="color: var(--cream);">
+                                Aggregates successful patterns across the sales team. Identifies what works
+                                and replicates it. Creates a living knowledge base of proven strategies.
+                            </p>
+                            <p class="body-card" style="color: var(--pink); font-weight: 500; margin-top: auto;">
+                                "Manager Zhang has exceeded targets for 3 consecutive months in the hotpot segment. Here's his playbook."
+                            </p>
+                        </div>
+                        <div class="step-tile fill-pink" style="min-height: 420px;">
+                            <span class="caption-mono" style="color: var(--green-deep);">Innovation 05</span>
+                            <span class="title-card" style="color: var(--green-deep); font-size: 56px;">Contextual<br>Learning</span>
+                            <div class="rule" style="background: var(--green-deep);"></div>
+                            <p class="body-card" style="color: var(--green-deep);">
+                                Learning happens in the flow of work, not in a classroom. Content is triggered
+                                by real situations, not scheduled modules. Knowledge is immediately applicable.
+                            </p>
+                            <p class="body-card" style="color: var(--green-deep); font-weight: 500; margin-top: auto;">
+                                Real-time competitive talking points, switching cost analysis, and success stories — right when you need them.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 reveal reveal-stagger-3" style="gap: 28px;">
+                        <div class="topic-tile" style="background: var(--green-lite); border-radius: var(--radius-card); padding: 28px 32px;">
+                            <span class="caption-mono" style="color: var(--pink);">Innovation 06</span>
+                            <span class="title-card-sm" style="color: var(--cream);">Continuous Evolution</span>
+                            <p class="body-card" style="color: var(--cream);">
+                                The system gets smarter with every interaction. Recommendations improve based on
+                                acceptance/rejection data. Knowledge gaps are automatically identified and addressed.
+                            </p>
+                        </div>
+                        <div class="topic-tile" style="background: var(--cream-2); border: var(--rule-weight) solid var(--green); border-radius: var(--radius-card); padding: 28px 32px;">
+                            <span class="caption-mono" style="color: var(--green);">Key Differentiator</span>
+                            <p class="body-card" style="color: var(--ink); font-weight: 500;">
+                                Each innovation builds on the <strong style="font-weight: 500;">Personal Memory</strong> foundation —
+                                the system learns your strengths, weaknesses, preferences, and successful patterns,
+                                providing increasingly personalised guidance over time.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">Six Interconnected Innovations</span>
+                    <span class="caption-mono">Slide 08</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 9: PHASE 1 FEATURES — MVP
+                 Cream surface, feature tiles
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="9">
+                <div class="topbar label-on-cream">
+                    <span class="label">Phase 1 · MVP</span>
+                    <span class="caption-mono" style="color: var(--green);">06 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 32px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green);">Foundation</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            MVP Features
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="grid-3 reveal reveal-stagger-3" style="gap: 24px;">
+                        <div class="step-tile border-cream-green" style="min-height: 420px;">
+                            <span class="caption-mono" style="color: var(--green);">01</span>
+                            <span class="title-card" style="font-size: 48px; line-height: 1.0;">AI Sales<br>Coach</span>
+                            <div class="rule" style="background: var(--green);"></div>
+                            <p class="body-card" style="color: var(--ink);">
+                                Ask questions about KHC sauce products — features, benefits, pricing, applications.
+                                Get sales scripts, objection handling guidance, and competitive comparisons.
+                            </p>
+                            <span class="caption-mono" style="color: var(--green); margin-top: auto;">Real-time conversational AI</span>
+                        </div>
+                        <div class="step-tile fill-green" style="min-height: 420px;">
+                            <span class="caption-mono" style="color: var(--pink);">02</span>
+                            <span class="title-card" style="font-size: 48px; line-height: 1.0; color: var(--cream);">Intelligent Menu<br>Recommender</span>
+                            <div class="rule" style="background: var(--pink);"></div>
+                            <p class="body-card" style="color: var(--cream);">
+                                Capture menu photo for automatic analysis. Dish recognition, taste profiling,
+                                KHC product matching with rationale. Innovation suggestions for new menu items.
+                            </p>
+                            <span class="caption-mono" style="color: var(--pink); margin-top: auto;">Photo + OCR + AI</span>
+                        </div>
+                        <div class="step-tile fill-pink" style="min-height: 420px;">
+                            <span class="caption-mono" style="color: var(--green-deep);">03</span>
+                            <span class="title-card" style="font-size: 48px; line-height: 1.0; color: var(--green-deep);">Voice-Enabled<br>Interaction</span>
+                            <div class="rule" style="background: var(--green-deep);"></div>
+                            <p class="body-card" style="color: var(--green-deep);">
+                                Voice input for questions, voice output for responses. Hands-free operation
+                                while driving between customer visits. Designed for on-the-go field sales.
+                            </p>
+                            <span class="caption-mono" style="color: var(--green-deep); margin-top: auto;">Hands-free · Mobile-first</span>
+                        </div>
+                    </div>
+
+                    <p class="body-card reveal reveal-stagger-4" style="color: var(--ink); text-align: center; max-width: 1200px; margin: 0 auto;">
+                        <strong style="font-weight: 500;">Phase 1 Timeline: 4 months</strong> · Validate core value, establish usage habits · Pilot with 20–30 users
+                    </p>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">Core Value · Mobile-First</span>
+                    <span class="caption-mono">Slide 09</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 10: PHASE 2 FEATURES — Advanced
+                 Cream surface
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="10">
+                <div class="topbar label-on-cream">
+                    <span class="label">Phase 2 · Enhancement</span>
+                    <span class="caption-mono" style="color: var(--green);">07 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 28px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green);">Advanced Intelligence</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            Phase 2 Features
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="grid-2 reveal reveal-stagger-3" style="gap: 28px;">
+                        <div class="topic-tile fill-green">
+                            <span class="caption-mono" style="color: var(--pink);">Feature 2.1</span>
+                            <span class="title-card-sm" style="color: var(--cream);">Personal Memory System</span>
+                            <p class="body-card" style="color: var(--cream);">
+                                Automatic memory extraction from interactions. Dynamically retrieved for personalised
+                                recommendations. Confidence scoring, memory decay, and continuous iteration.
+                            </p>
+                        </div>
+                        <div class="topic-tile fill-pink">
+                            <span class="caption-mono" style="color: var(--green-deep);">Feature 2.2</span>
+                            <span class="title-card-sm" style="color: var(--green-deep);">Predictive Coaching</span>
+                            <p class="body-card" style="color: var(--green-deep);">
+                                Analyse upcoming visit schedule. Identify knowledge gaps from personal memory.
+                                Generate personalised preparation briefs with push notifications.
+                            </p>
+                        </div>
+                        <div class="topic-tile fill-green-lite">
+                            <span class="caption-mono" style="color: var(--pink);">Feature 2.3</span>
+                            <span class="title-card-sm" style="color: var(--cream);">Success Pattern Mining</span>
+                            <p class="body-card" style="color: var(--cream);">
+                                Aggregate successful interactions across the team. Identify common patterns.
+                                Extract and share best practices. Surface top performers' strategies.
+                            </p>
+                        </div>
+                        <div class="topic-tile fill-cream-border">
+                            <span class="caption-mono" style="color: var(--green);">Feature 2.4</span>
+                            <span class="title-card-sm" style="color: var(--green);">Mobile Learning Hub</span>
+                            <p class="body-card" style="color: var(--ink);">
+                                Bite-sized learning modules (3–5 minutes). Content from Marketing Knowledge Base.
+                                Progress tracking. Personalised learning paths based on memory analysis.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex-center reveal reveal-stagger-4" style="gap: 16px; margin-top: 4px;">
+                        <span class="caption-mono" style="color: var(--green);">Phase 2 Timeline: 3 months</span>
+                        <span class="caption-mono" style="color: var(--pink);">|</span>
+                        <span class="caption-mono" style="color: var(--green);">Deepen engagement · Deliver advanced intelligence</span>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">Personal Memory · Predictive · Patterns · Learning Hub</span>
+                    <span class="caption-mono">Slide 10</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 11: SOLUTION ARCHITECTURE
+                 Cream surface, layered stack
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="11">
+                <div class="topbar label-on-cream">
+                    <span class="label">Architecture</span>
+                    <span class="caption-mono" style="color: var(--green);">08 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 24px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green);">System Design</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            Solution Architecture
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <!-- Architecture layers as visual stack -->
+                    <div class="flex-col reveal reveal-stagger-3" style="gap: 4px; margin-top: 8px;">
+                        <!-- Layer 1: Mobile Client -->
+                        <div style="background: var(--green); border-radius: var(--radius-card); padding: 20px 32px; display: flex; align-items: center; gap: 48px;">
+                            <span class="caption-mono" style="color: var(--pink); min-width: 140px;">MOBILE CLIENT</span>
+                            <span class="body-card" style="color: var(--cream);">WeChat Work Application</span>
+                            <span class="body-card" style="color: var(--cream);">·</span>
+                            <span class="body-card" style="color: var(--cream);">Mini Program (Alternative)</span>
+                            <span class="body-card" style="color: var(--cream);">·</span>
+                            <span class="body-card" style="color: var(--cream);">Future: Native App</span>
+                            <span class="caption-mono" style="color: var(--pink); margin-left: auto;">SSO · Camera · Voice</span>
+                        </div>
+
+                        <!-- Layer 2: API Gateway -->
+                        <div style="background: var(--green-lite); border-radius: var(--radius-card); padding: 16px 32px; display: flex; align-items: center; gap: 48px;">
+                            <span class="caption-mono" style="color: var(--pink); min-width: 140px;">API GATEWAY</span>
+                            <span class="body-card" style="color: var(--cream);">Authentication (WeChat Work SSO)</span>
+                            <span class="body-card" style="color: var(--cream);">· Rate Limiting · Request Routing · Versioning</span>
+                            <span class="caption-mono" style="color: var(--pink); margin-left: auto;">Kong / AWS</span>
+                        </div>
+
+                        <!-- Layer 3: Services Row -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;">
+                            <div style="background: var(--cream-2); border: var(--rule-weight) solid var(--green); border-radius: var(--radius-card); padding: 20px 24px;">
+                                <span class="caption-mono" style="color: var(--green);">AI / LLM SERVICE</span>
+                                <div style="margin-top: 8px;">
+                                    <p class="body-card" style="color: var(--ink);">Chat Engine</p>
+                                    <p class="body-card" style="color: var(--ink);">Menu Analysis</p>
+                                    <p class="body-card" style="color: var(--ink);">Predictive Coaching</p>
+                                </div>
+                                <span class="caption-mono" style="color: var(--green); margin-top: 8px; display: block;">DeepSeek + Qwen</span>
+                            </div>
+                            <div style="background: var(--cream-2); border: var(--rule-weight) solid var(--green); border-radius: var(--radius-card); padding: 20px 24px;">
+                                <span class="caption-mono" style="color: var(--green);">KNOWLEDGE SERVICE</span>
+                                <div style="margin-top: 8px;">
+                                    <p class="body-card" style="color: var(--ink);">Content Management</p>
+                                    <p class="body-card" style="color: var(--ink);">Product Lookup</p>
+                                    <p class="body-card" style="color: var(--ink);">Semantic Search</p>
+                                </div>
+                                <span class="caption-mono" style="color: var(--green); margin-top: 8px; display: block;">Custom Microservice</span>
+                            </div>
+                            <div style="background: var(--cream-2); border: var(--rule-weight) solid var(--green); border-radius: var(--radius-card); padding: 20px 24px;">
+                                <span class="caption-mono" style="color: var(--green);">MEMORY SERVICE</span>
+                                <div style="margin-top: 8px;">
+                                    <p class="body-card" style="color: var(--ink);">User Memory Mgmt</p>
+                                    <p class="body-card" style="color: var(--ink);">Pattern Mining</p>
+                                    <p class="body-card" style="color: var(--ink);">Learning Tracking</p>
+                                </div>
+                                <span class="caption-mono" style="color: var(--green); margin-top: 8px; display: block;">Custom Microservice</span>
+                            </div>
+                        </div>
+
+                        <!-- Layer 4: Data -->
+                        <div style="background: var(--green); border-radius: var(--radius-card); padding: 16px 32px; display: flex; align-items: center; gap: 32px; flex-wrap: wrap;">
+                            <span class="caption-mono" style="color: var(--pink);">DATA LAYER</span>
+                            <div class="legend-row">
+                                <span class="legend-swatch" style="background: var(--pink);"></span>
+                                <span class="caption-mono" style="color: var(--cream); font-size: 18px;">Vector DB (Milvus)</span>
+                            </div>
+                            <div class="legend-row">
+                                <span class="legend-swatch" style="background: var(--cream);"></span>
+                                <span class="caption-mono" style="color: var(--cream); font-size: 18px;">PostgreSQL</span>
+                            </div>
+                            <div class="legend-row">
+                                <span class="legend-swatch" style="background: var(--green-lite);"></span>
+                                <span class="caption-mono" style="color: var(--cream); font-size: 18px;">Object Storage (OSS)</span>
+                            </div>
+                            <div class="legend-row">
+                                <span class="legend-swatch" style="background: var(--pink-deep);"></span>
+                                <span class="caption-mono" style="color: var(--cream); font-size: 18px;">Redis Cache</span>
+                            </div>
+                        </div>
+
+                        <!-- Layer 5: Infrastructure -->
+                        <div style="background: var(--pink); border-radius: var(--radius-card); padding: 16px 32px; display: flex; align-items: center; gap: 24px;">
+                            <span class="caption-mono" style="color: var(--green-deep);">CLOUD INFRASTRUCTURE</span>
+                            <span class="body-card" style="color: var(--green-deep);">AWS China / Alibaba Cloud · Data Residency · PIPL Compliant · 99.5% Uptime</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">Microservices · 6 Components</span>
+                    <span class="caption-mono">Slide 11</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 12: TECHNOLOGY STACK
+                 Cream surface, comparison table
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="12">
+                <div class="topbar label-on-cream">
+                    <span class="label">Technology</span>
+                    <span class="caption-mono" style="color: var(--green);">09 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 28px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green);">Stack</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            Technology Stack
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="grid-2 reveal reveal-stagger-3" style="gap: 40px;">
+                        <div>
+                            <table class="compare-table">
+                                <thead>
+                                    <tr>
+                                        <th>Layer</th>
+                                        <th>Technology</th>
+                                        <th>Rationale</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight">LLM (Primary)</td>
+                                        <td>DeepSeek-V3.2 / R1</td>
+                                        <td>Excellent Chinese, 1/10–1/30 cost of OpenAI, 164K context</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight">LLM (Backup)</td>
+                                        <td>Alibaba Qwen</td>
+                                        <td>Strong Alibaba Cloud ecosystem</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight">Mobile Platform</td>
+                                        <td>WeChat Work</td>
+                                        <td>Existing enterprise infra, no app store approval</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight">Backend</td>
+                                        <td>Python FastAPI</td>
+                                        <td>AI ecosystem compatibility, high performance</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight">Vector DB</td>
+                                        <td>Milvus</td>
+                                        <td>Purpose-built for AI, excellent performance</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight">Relational DB</td>
+                                        <td>PostgreSQL</td>
+                                        <td>Robust, open-source, structured data</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight">OCR</td>
+                                        <td>Baidu AI / Tencent AI</td>
+                                        <td>Mature Chinese text recognition</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="flex-col gap-20">
+                            <div class="topic-tile fill-green">
+                                <span class="caption-mono" style="color: var(--pink);">Why DeepSeek?</span>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px;">
+                                    <div>
+                                        <span class="caption-mono" style="color: var(--pink); font-size: 16px;">Input Cost</span>
+                                        <p class="body-card" style="color: var(--cream);">$0.27 / M tokens</p>
+                                        <span class="caption-mono" style="color: var(--pink); font-size: 14px;">vs GPT-4o: $2.50</span>
+                                    </div>
+                                    <div>
+                                        <span class="caption-mono" style="color: var(--pink); font-size: 16px;">Output Cost</span>
+                                        <p class="body-card" style="color: var(--cream);">$0.41 / M tokens</p>
+                                        <span class="caption-mono" style="color: var(--pink); font-size: 14px;">vs GPT-4o: $10.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="topic-tile fill-cream-border">
+                                <span class="caption-mono" style="color: var(--green);">Key Considerations</span>
+                                <ul class="bullet-list" style="padding-left: 0; margin-top: 8px;">
+                                    <li class="body-card" style="color: var(--ink);">Data Residency: Mainland China, PIPL compliant</li>
+                                    <li class="body-card" style="color: var(--ink);">Offline capability: Cache for low-connectivity</li>
+                                    <li class="body-card" style="color: var(--ink);">Security: TLS 1.2+, AES-256, RBAC</li>
+                                    <li class="body-card" style="color: var(--ink);">Scalability: Microservices, horizontal scaling</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">DeepSeek · WeChat Work · Milvus · FastAPI</span>
+                    <span class="caption-mono">Slide 12</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 13: IMPLEMENTATION ROADMAP
+                 Cream surface, timeline cards
+                 =========================================== -->
+            <section class="slide slide-surface-cream" data-slide="13">
+                <div class="topbar label-on-cream">
+                    <span class="label">Implementation</span>
+                    <span class="caption-mono" style="color: var(--green);">10 / 16</span>
+                </div>
+
+                <div class="slide-content" style="gap: 28px;">
+                    <div>
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--green);">Roadmap</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--green);">
+                            Implementation Approach
+                        </h2>
+                        <div class="rule" style="background: var(--pink); width: 100px; margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="grid-2 reveal reveal-stagger-3" style="gap: 28px;">
+                        <!-- Phase 1 -->
+                        <div class="step-tile fill-green" style="min-height: 380px;">
+                            <span class="caption-mono" style="color: var(--pink);">Phase 1 · Q3–Q4 2026</span>
+                            <span class="title-card" style="color: var(--cream); font-size: 56px;">MVP</span>
+                            <span class="caption-mono" style="color: var(--pink);">4 Months</span>
+                            <div class="rule" style="background: var(--pink);"></div>
+                            <p class="body-card" style="color: var(--cream);">
+                                Sales Coach + Menu Recommender (with image recognition) + Voice.
+                                Validate core value and establish usage habits.
+                            </p>
+                            <div style="display: flex; gap: 12px; margin-top: auto;">
+                                <span class="caption-mono" style="color: var(--pink); font-size: 16px;">M1: Design (4w)</span>
+                                <span class="caption-mono" style="color: var(--pink); font-size: 16px;">M2: Dev (8w)</span>
+                                <span class="caption-mono" style="color: var(--pink); font-size: 16px;">M3: Test (4w)</span>
+                                <span class="caption-mono" style="color: var(--pink); font-size: 16px;">M4: Pilot (4w)</span>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2 -->
+                        <div class="step-tile fill-pink" style="min-height: 380px;">
+                            <span class="caption-mono" style="color: var(--green-deep);">Phase 2 · Q1–Q2 2027</span>
+                            <span class="title-card" style="color: var(--green-deep); font-size: 56px;">Enhancement</span>
+                            <span class="caption-mono" style="color: var(--green-deep);">3 Months</span>
+                            <div class="rule" style="background: var(--green-deep);"></div>
+                            <p class="body-card" style="color: var(--green-deep);">
+                                Personal Memory + Predictive Coaching + Success Pattern Mining + Learning Hub.
+                                Deepen engagement and deliver advanced intelligence.
+                            </p>
+                            <div style="display: flex; gap: 12px; margin-top: auto;">
+                                <span class="caption-mono" style="color: var(--green-deep); font-size: 16px;">M5: Memory (4w)</span>
+                                <span class="caption-mono" style="color: var(--green-deep); font-size: 16px;">M6: Features (6w)</span>
+                                <span class="caption-mono" style="color: var(--green-deep); font-size: 16px;">M7: Rollout (2w)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk mitigation -->
+                    <div class="grid-3 reveal reveal-stagger-4" style="gap: 20px;">
+                        <div class="topic-tile fill-cream-border" style="padding: 24px 28px;">
+                            <span class="caption-mono" style="color: var(--green);">Risk</span>
+                            <p class="body-card" style="color: var(--ink); font-weight: 500;">Knowledge base quality</p>
+                            <p class="body-card" style="color: var(--ink);">Early content assessment; remediation if needed</p>
+                        </div>
+                        <div class="topic-tile fill-cream-border" style="padding: 24px 28px;">
+                            <span class="caption-mono" style="color: var(--green);">Risk</span>
+                            <p class="body-card" style="color: var(--ink); font-weight: 500;">AI hallucination</p>
+                            <p class="body-card" style="color: var(--ink);">Human-in-the-loop; confidence scoring; RAG</p>
+                        </div>
+                        <div class="topic-tile fill-cream-border" style="padding: 24px 28px;">
+                            <span class="caption-mono" style="color: var(--green);">Risk</span>
+                            <p class="body-card" style="color: var(--ink); font-weight: 500;">User adoption</p>
+                            <p class="body-card" style="color: var(--ink);">Sales rep involvement; gamification; sponsorship</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-cream">
+                    <span class="caption-mono">4-Month MVP → 3-Month Enhancement</span>
+                    <span class="caption-mono">Slide 13</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 14: WHY INFOSYS
+                 Green surface, statement
+                 =========================================== -->
+            <section class="slide slide-surface-green" data-slide="14">
+                <div class="topbar label-on-green">
+                    <span class="label">Why Infosys</span>
+                    <div class="monogram-circle on-green">IS</div>
+                </div>
+
+                <div class="slide-content statement-pad" style="gap: 40px;">
+                    <span class="caption-mono reveal reveal-stagger-1" style="color: var(--pink); letter-spacing: 0.2em;">The Partner</span>
+                    <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--cream); font-size: 120px; line-height: 0.96;">
+                        Why Infosys?
+                    </h2>
+                    <div class="rule" style="background: var(--pink); width: 120px;"></div>
+
+                    <div class="grid-2 reveal reveal-stagger-3" style="gap: 28px; width: 100%;">
+                        <div class="topic-tile" style="background: var(--green-lite); border-radius: var(--radius-card); padding: 32px;">
+                            <span class="caption-mono" style="color: var(--pink);">Existing Relationship</span>
+                            <span class="title-card-sm" style="color: var(--cream);">Already Your AI Partner</span>
+                            <p class="body-card" style="color: var(--cream);">
+                                Infosys already manages KHC's Data and AI platforms globally — deep understanding
+                                of your technology landscape, established governance, and enterprise architecture knowledge.
+                            </p>
+                        </div>
+                        <div class="topic-tile" style="background: var(--cream-2); border: var(--rule-weight) solid var(--pink); border-radius: var(--radius-card); padding: 32px;">
+                            <span class="caption-mono" style="color: var(--green);">China Market</span>
+                            <span class="title-card-sm" style="color: var(--green);">Global + Local</span>
+                            <p class="body-card" style="color: var(--ink);">
+                                Global AI expertise combined with deep China market understanding.
+                                Local team with knowledge of Chinese regulations and market dynamics.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid-4 reveal reveal-stagger-4" style="gap: 20px; width: 100%;">
+                        <div class="flex-col" style="align-items: center; text-align: center; gap: 8px;">
+                            <span class="stat-figure" style="font-size: 72px; line-height: 1.0; color: var(--cream);">Platform</span>
+                            <p class="body-card" style="color: var(--cream);">Not just an app — a scalable platform for other markets</p>
+                        </div>
+                        <div class="flex-col" style="align-items: center; text-align: center; gap: 8px;">
+                            <span class="stat-figure" style="font-size: 72px; line-height: 1.0; color: var(--cream);">Innovation</span>
+                            <p class="body-card" style="color: var(--cream);">Personal Memory &amp; Predictive Coaching frameworks</p>
+                        </div>
+                        <div class="flex-col" style="align-items: center; text-align: center; gap: 8px;">
+                            <span class="stat-figure" style="font-size: 72px; line-height: 1.0; color: var(--cream);">Speed</span>
+                            <p class="body-card" style="color: var(--cream);">Pre-built components accelerate delivery</p>
+                        </div>
+                        <div class="flex-col" style="align-items: center; text-align: center; gap: 8px;">
+                            <span class="stat-figure" style="font-size: 72px; line-height: 1.0; color: var(--cream);">Grade</span>
+                            <p class="body-card" style="color: var(--cream);">Enterprise-grade security, compliance, scalability</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-green">
+                    <span class="caption-mono">Global AI + Local China · Enterprise Platform</span>
+                    <span class="caption-mono">Slide 14</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 15: BUSINESS OUTCOMES — KPI Summary
+                 Green surface, KPI stat row
+                 =========================================== -->
+            <section class="slide slide-surface-green" data-slide="15">
+                <div class="topbar label-on-green">
+                    <span class="label">Business Impact</span>
+                    <span class="caption-mono" style="color: var(--pink);">11 / 16</span>
+                </div>
+
+                <div class="slide-content statement-pad" style="gap: 60px; justify-content: center;">
+                    <div style="text-align: center;">
+                        <span class="caption-mono reveal reveal-stagger-1" style="color: var(--pink); letter-spacing: 0.2em;">Expected Outcomes</span>
+                        <h2 class="headline-xl reveal reveal-stagger-2" style="color: var(--cream); font-size: 96px;">
+                            Business Impact
+                        </h2>
+                    </div>
+
+                    <div class="kpi-row reveal reveal-stagger-3" style="grid-template-columns: repeat(4, 1fr); gap: 28px;">
+                        <div class="kpi-block" style="background: var(--cream-2); border-radius: var(--radius-card); padding: 36px 20px;">
+                            <span class="stat-figure" style="font-size: 100px; line-height: 0.9; color: var(--green);">30<span class="stat-figure-unit" style="font-size: 50px;">%</span></span>
+                            <span class="caption-mono" style="color: var(--green); margin-top: 12px;">Product Knowledge</span>
+                            <p class="body-card" style="color: var(--ink); text-align: center; margin-top: 8px;">Improvement in sales team product knowledge</p>
+                        </div>
+                        <div class="kpi-block" style="background: var(--pink); border-radius: var(--radius-card); padding: 36px 20px;">
+                            <span class="stat-figure" style="font-size: 100px; line-height: 0.9; color: var(--green-deep);">20<span class="stat-figure-unit" style="font-size: 50px;">%</span></span>
+                            <span class="caption-mono" style="color: var(--green-deep); margin-top: 12px;">Revenue Increase</span>
+                            <p class="body-card" style="color: var(--green-deep); text-align: center; margin-top: 8px;">Sauce category revenue per sales rep</p>
+                        </div>
+                        <div class="kpi-block" style="background: var(--green-lite); border-radius: var(--radius-card); padding: 36px 20px;">
+                            <span class="stat-figure" style="font-size: 100px; line-height: 0.9; color: var(--cream);">50<span class="stat-figure-unit" style="font-size: 50px;">%</span></span>
+                            <span class="caption-mono" style="color: var(--pink); margin-top: 12px;">Ramp-Up Reduction</span>
+                            <p class="body-card" style="color: var(--cream); text-align: center; margin-top: 8px;">New hire ramp-up time reduction</p>
+                        </div>
+                        <div class="kpi-block" style="background: var(--cream-2); border: var(--rule-weight) solid var(--pink); border-radius: var(--radius-card); padding: 36px 20px;">
+                            <span class="stat-figure" style="font-size: 100px; line-height: 0.9; color: var(--green);">80<span class="stat-figure-unit" style="font-size: 50px;">%</span></span>
+                            <span class="caption-mono" style="color: var(--green); margin-top: 12px;">Active Usage</span>
+                            <p class="body-card" style="color: var(--ink); text-align: center; margin-top: 8px;">Monthly active usage among field sales team</p>
+                        </div>
+                    </div>
+
+                    <div class="flex-center reveal reveal-stagger-4" style="gap: 24px;">
+                        <div class="legend-row">
+                            <span class="legend-swatch" style="background: var(--pink);"></span>
+                            <span class="caption-mono" style="color: var(--cream);">Market: ¥4,981B condiment market (2024)</span>
+                        </div>
+                        <div class="legend-row">
+                            <span class="legend-swatch" style="background: var(--cream);"></span>
+                            <span class="caption-mono" style="color: var(--cream);">CAGR: 7.0% overall · 10.2% compound seasonings</span>
+                        </div>
+                        <div class="legend-row">
+                            <span class="legend-swatch" style="background: var(--green-lite);"></span>
+                            <span class="caption-mono" style="color: var(--cream);">Channels: 50% foodservice · 22% restaurant chain penetration</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-green">
+                    <span class="caption-mono">Measurable · Achievable · Tracked</span>
+                    <span class="caption-mono">Slide 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 16: CLOSING
+                 Green surface, thank you
+                 =========================================== -->
+            <section class="slide slide-surface-green" data-slide="16">
+                <div class="topbar label-on-green">
+                    <span class="label">KHC China · Infosys</span>
+                    <div class="monogram-circle on-green">IS</div>
+                </div>
+
+                <div class="statement-content">
+                    <span class="caption-mono reveal reveal-stagger-1" style="color: var(--pink); letter-spacing: 0.2em;">Next Steps</span>
+                    <p class="display-hero reveal reveal-stagger-2" style="color: var(--cream); font-size: 180px; line-height: 0.92;">
+                        Let's Build<br>
+                        <span style="color: var(--pink);">Together</span>
+                    </p>
+                    <div class="rule" style="background: var(--pink); width: 160px; margin: 16px 0;"></div>
+                    <div class="flex-col reveal reveal-stagger-3" style="gap: 8px; align-items: center;">
+                        <p class="headline" style="color: var(--cream); font-weight: 400; font-size: 48px; line-height: 1.3;">
+                            AI-Powered Sales Coach for KHC China
+                        </p>
+                        <p class="body-lg" style="color: var(--cream); opacity: 0.8;">
+                            Infosys · June 2026 · Draft v0.1
+                        </p>
+                    </div>
+
+                    <div class="meta-dl on-green reveal reveal-stagger-4" style="margin-top: 40px; width: 100%; max-width: 1000px;">
+                        <div>
+                            <dt>Document</dt>
+                            <dd>KHC-CN-AI-SOL-001</dd>
+                        </div>
+                        <div>
+                            <dt>Status</dt>
+                            <dd>Draft for Customer Review</dd>
+                        </div>
+                        <div>
+                            <dt>Contact</dt>
+                            <dd>Infosys · AI Practice</dd>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footline on-green">
+                    <span class="caption-mono">KHC-CN-AI-SOL-001 · v0.1</span>
+                    <span class="caption-mono">16 / 16</span>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===========================================
+         DECK CONTROLS (outside stage)
+         =========================================== -->
+    <div class="deck-controls" id="deckControls">
+        <button id="prevBtn" title="Previous (←)" style="background: var(--green); color: var(--cream); border: 2px solid var(--pink); border-radius: 50%; width: 44px; height: 44px; font-size: 18px; cursor: pointer; font-family: var(--font-mono); display: flex; align-items: center; justify-content: center;">←</button>
+        <span id="slideCounter" style="font-family: var(--font-mono); font-size: 16px; color: var(--cream); letter-spacing: 0.12em; min-width: 80px; text-align: center;">01 / 16</span>
+        <button id="nextBtn" title="Next (→)" style="background: var(--green); color: var(--cream); border: 2px solid var(--pink); border-radius: 50%; width: 44px; height: 44px; font-size: 18px; cursor: pointer; font-family: var(--font-mono); display: flex; align-items: center; justify-content: center;">→</button>
+    </div>
+
+    <!-- ===========================================
+         INLINE EDITING HOTZONE + BUTTON
+         =========================================== -->
+    <div class="edit-hotzone" id="editHotzone" title="Hover to reveal edit, or press E"></div>
+    <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✏️ Edit</button>
+
+    <!-- ===========================================
+         SLIDE PRESENTATION CONTROLLER
+         =========================================== -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                this.stage = document.getElementById('deckStage');
+                this.counterEl = document.getElementById('slideCounter');
+
+                this.setupStageScale();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.setupButtonNav();
+                this.showSlide(0);
+            }
+
+            setupStageScale() {
+                const scale = () => {
+                    const ww = window.innerWidth;
+                    const wh = window.innerHeight;
+                    const factor = Math.min(ww / 1920, wh / 1080);
+                    const x = (ww - 1920 * factor) / 2;
+                    const y = (wh - 1080 * factor) / 2;
+                    this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+                };
+                scale();
+                window.addEventListener('resize', scale);
+                window.addEventListener('orientationchange', () => setTimeout(scale, 300));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    // Ignore if user is editing text
+                    if (document.activeElement && document.activeElement.getAttribute('contenteditable') === 'true') {
+                        return;
+                    }
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                        e.preventDefault();
+                        this.next();
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.prev();
+                    } else if (e.key === 'Home') {
+                        e.preventDefault();
+                        this.showSlide(0);
+                    } else if (e.key === 'End') {
+                        e.preventDefault();
+                        this.showSlide(this.totalSlides - 1);
+                    }
+                });
+            }
+
+            setupTouchNav() {
+                let startX = 0;
+                let startY = 0;
+                let isTracking = false;
+
+                this.stage.addEventListener('touchstart', (e) => {
+                    const touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    isTracking = true;
+                }, { passive: true });
+
+                this.stage.addEventListener('touchmove', (e) => {
+                    if (!isTracking) return;
+                    const touch = e.touches[0];
+                    const dx = touch.clientX - startX;
+                    const dy = touch.clientY - startY;
+                    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                        isTracking = false;
+                        if (dx > 0) this.prev();
+                        else this.next();
+                    }
+                }, { passive: true });
+
+                this.stage.addEventListener('touchend', () => {
+                    isTracking = false;
+                }, { passive: true });
+            }
+
+            setupWheelNav() {
+                let wheelTimeout = null;
+                this.stage.addEventListener('wheel', (e) => {
+                    if (wheelTimeout) return;
+                    // Only if vertical scroll is significant
+                    if (Math.abs(e.deltaY) > 30) {
+                        wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 600);
+                        if (e.deltaY > 0) this.next();
+                        else this.prev();
+                    }
+                }, { passive: true });
+            }
+
+            setupButtonNav() {
+                document.getElementById('prevBtn').addEventListener('click', () => this.prev());
+                document.getElementById('nextBtn').addEventListener('click', () => this.next());
+            }
+
+            next() {
+                this.showSlide(this.currentSlide + 1);
+            }
+
+            prev() {
+                this.showSlide(this.currentSlide - 1);
+            }
+
+            showSlide(index) {
+                this.currentSlide = Math.max(0, Math.min(index, this.totalSlides - 1));
+                this.slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === this.currentSlide);
+                    slide.classList.toggle('visible', i === this.currentSlide);
+                });
+                // Update counter
+                const num = String(this.currentSlide + 1).padStart(2, '0');
+                this.counterEl.textContent = `${num} / ${String(this.totalSlides).padStart(2, '0')}`;
+            }
+        }
+
+        // ===========================================
+        // INLINE EDITOR
+        // ===========================================
+        class InlineEditor {
+            constructor() {
+                this.isActive = false;
+                this.toggleBtn = document.getElementById('editToggle');
+                this.hotzone = document.getElementById('editHotzone');
+                this.hideTimeout = null;
+
+                this.setupHoverReveal();
+                this.setupKeyboardShortcut();
+                this.setupHotzoneClick();
+
+                this.toggleBtn.addEventListener('click', () => this.toggleEditMode());
+            }
+
+            setupHoverReveal() {
+                this.hotzone.addEventListener('mouseenter', () => {
+                    clearTimeout(this.hideTimeout);
+                    this.toggleBtn.classList.add('show');
+                });
+                this.hotzone.addEventListener('mouseleave', () => {
+                    this.hideTimeout = setTimeout(() => {
+                        if (!this.isActive) this.toggleBtn.classList.remove('show');
+                    }, 400);
+                });
+                this.toggleBtn.addEventListener('mouseenter', () => {
+                    clearTimeout(this.hideTimeout);
+                });
+                this.toggleBtn.addEventListener('mouseleave', () => {
+                    this.hideTimeout = setTimeout(() => {
+                        if (!this.isActive) this.toggleBtn.classList.remove('show');
+                    }, 400);
+                });
+            }
+
+            setupHotzoneClick() {
+                this.hotzone.addEventListener('click', () => this.toggleEditMode());
+            }
+
+            setupKeyboardShortcut() {
+                document.addEventListener('keydown', (e) => {
+                    if ((e.key === 'e' || e.key === 'E') &&
+                        !e.target.getAttribute('contenteditable') &&
+                        !e.ctrlKey && !e.metaKey) {
+                        this.toggleEditMode();
+                    }
+                });
+            }
+
+            toggleEditMode() {
+                this.isActive = !this.isActive;
+                this.toggleBtn.classList.toggle('active', this.isActive);
+                document.body.classList.toggle('edit-mode-active', this.isActive);
+
+                if (this.isActive) {
+                    // Make all text elements editable
+                    document.querySelectorAll('.slide.visible h1, .slide.visible h2, .slide.visible p, ' +
+                        '.slide.visible span, .slide.visible li, .slide.visible dd, .slide.visible dt')
+                        .forEach(el => {
+                            // Skip mono labels and captions that are structural
+                            if (el.classList.contains('caption-mono') || el.classList.contains('label') ||
+                                el.classList.contains('label-tight') || el.classList.contains('axis-mono')) {
+                                return;
+                            }
+                            if (el.closest('.monogram-circle') || el.closest('.deck-controls') ||
+                                el.closest('.edit-toggle') || el.closest('.edit-hotzone')) {
+                                return;
+                            }
+                            el.setAttribute('contenteditable', 'true');
+                        });
+                    this.toggleBtn.textContent = '💾 Save';
+                } else {
+                    // Remove contenteditable and save to localStorage
+                    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+                        el.removeAttribute('contenteditable');
+                    });
+                    this.saveEdits();
+                    this.toggleBtn.textContent = '✏️ Edit';
+                    this.toggleBtn.classList.remove('show');
+                }
+            }
+
+            saveEdits() {
+                // Save current state to localStorage
+                const slides = [];
+                document.querySelectorAll('.slide').forEach((slide, i) => {
+                    slides.push(slide.innerHTML);
+                });
+                try {
+                    localStorage.setItem('khc-sales-coach-edits', JSON.stringify(slides));
+                    console.log('Edits saved to localStorage');
+                } catch (e) {
+                    console.warn('Could not save edits:', e);
+                }
+            }
+
+            loadEdits() {
+                try {
+                    const data = localStorage.getItem('khc-sales-coach-edits');
+                    if (data) {
+                        const slides = JSON.parse(data);
+                        document.querySelectorAll('.slide').forEach((slide, i) => {
+                            if (slides[i]) {
+                                slide.innerHTML = slides[i];
+                            }
+                        });
+                        console.log('Edits loaded from localStorage');
+                    }
+                } catch (e) {
+                    console.warn('Could not load edits:', e);
+                }
+            }
+        }
+
+        // ===========================================
+        // INIT
+        // ===========================================
+        const presentation = new SlidePresentation();
+        const editor = new InlineEditor();
+
+        // Load saved edits if any
+        setTimeout(() => editor.loadEdits(), 100);
+
+        // Ctrl+S to save edits
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                if (editor.isActive) {
+                    editor.toggleEditMode();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

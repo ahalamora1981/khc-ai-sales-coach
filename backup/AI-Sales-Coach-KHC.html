@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Sales Coach — Kraft Heinz China</title>
+
+    <!-- Fonts: Source Serif 4 (optical-size axis 8..60, weights 300–800) + JetBrains Mono (400, 500, 700) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600;8..60,700;8..60,800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES — EDITORIAL FOREST
+           Deep forest green · Dusty rose pink · Oat cream paper
+           =========================================== */
+        :root {
+            --green: #2e4a2a;
+            --green-deep: #243a21;
+            --green-lite: #3a5a36;
+            --pink: #e89cb1;
+            --pink-deep: #d27e96;
+            --cream: #efe7d4;
+            --cream-2: #e6dcc4;
+            --ink: #1a1a17;
+
+            --font-serif: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration: 0.7s;
+        }
+
+        /* ===========================================
+           FIXED 16:9 STAGE: MANDATORY BASE STYLES
+           From viewport-base.css — included in full
+           =========================================== */
+
+        /* 1. Lock the browser viewport */
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--green-deep);
+        }
+
+        /* 2. Full-window deck viewport */
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--green-deep);
+        }
+
+        /* 3. Fixed 16:9 design canvas */
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--cream);
+        }
+
+        /* 4. Slides stack inside the fixed stage */
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--cream);
+        }
+
+        .slide.active,
+        .slide.visible {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+        }
+
+        /* 5. Keep media inside authored slide bounds */
+        img,
+        video,
+        canvas,
+        svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* 6. Presentation chrome stays outside the slide design system */
+        .deck-controls {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        /* 7. Print one fixed-size slide per page */
+        @media print {
+            html,
+            body {
+                width: 1920px;
+                height: auto;
+                overflow: visible;
+                background: #fff;
+            }
+            .deck-viewport {
+                position: static;
+                overflow: visible;
+                background: #fff;
+            }
+            .deck-stage {
+                position: static;
+                width: auto;
+                height: auto;
+                transform: none !important;
+                background: none;
+            }
+            .slide {
+                position: relative;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                width: 1920px;
+                height: 1080px;
+                break-after: page;
+                page-break-after: always;
+            }
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+            .deck-controls {
+                display: none !important;
+            }
+        }
+
+        /* 8. Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+
+        /* ===========================================
+           GLOBAL RESET
+           =========================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ===========================================
+           EDITORIAL FOREST — CORE TYPOGRAPHY
+           =========================================== */
+
+        /* Display Hero — 220px cover/stat moments */
+        .serif-hero {
+            font-family: var(--font-serif);
+            font-size: 220px;
+            font-weight: 500;
+            line-height: 0.92;
+            letter-spacing: -0.02em;
+        }
+
+        /* Display — 140px big-idea statements */
+        .serif-display {
+            font-family: var(--font-serif);
+            font-size: 140px;
+            font-weight: 500;
+            line-height: 1.02;
+            letter-spacing: -0.02em;
+        }
+
+        /* Headline XL — 96px primary on cream */
+        .serif-hxl {
+            font-family: var(--font-serif);
+            font-size: 96px;
+            font-weight: 500;
+            line-height: 0.96;
+            letter-spacing: -0.02em;
+        }
+
+        /* Headline — 84px primary on green */
+        .serif-h {
+            font-family: var(--font-serif);
+            font-size: 84px;
+            font-weight: 500;
+            line-height: 1.0;
+            letter-spacing: -0.02em;
+        }
+
+        /* Headline SM — 80px stat intro */
+        .serif-hs {
+            font-family: var(--font-serif);
+            font-size: 80px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.02em;
+        }
+
+        /* Title Card LG — 84px inside hero tile */
+        .serif-tclg {
+            font-family: var(--font-serif);
+            font-size: 84px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.01em;
+        }
+
+        /* Title Card — 68px inside step tile */
+        .serif-tc {
+            font-family: var(--font-serif);
+            font-size: 68px;
+            font-weight: 500;
+            line-height: 0.96;
+            letter-spacing: -0.01em;
+        }
+
+        /* Title Card SM — 56px inside standard tile */
+        .serif-tcs {
+            font-family: var(--font-serif);
+            font-size: 56px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.01em;
+        }
+
+        /* Figure Caption — 56px centered */
+        .serif-fig {
+            font-family: var(--font-serif);
+            font-size: 56px;
+            font-weight: 500;
+            line-height: 1.05;
+        }
+
+        /* Name — 44px weight 600 attribution */
+        .serif-name {
+            font-family: var(--font-serif);
+            font-size: 44px;
+            font-weight: 600;
+            line-height: 1.0;
+        }
+
+        /* Meta Value — 32px dl value */
+        .serif-meta {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 500;
+        }
+
+        /* Body LG — 32px summary/stat description */
+        .serif-body-lg {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.32;
+        }
+
+        /* Body — 30px standard */
+        .serif-body {
+            font-family: var(--font-serif);
+            font-size: 30px;
+            font-weight: 400;
+            line-height: 1.38;
+        }
+
+        /* Body Card — 26px inside tiles */
+        .serif-body-card {
+            font-family: var(--font-serif);
+            font-size: 26px;
+            font-weight: 400;
+            line-height: 1.34;
+        }
+
+        /* Label — 26px mono 0.18em topbar/eyebrow */
+        .mono-label {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        /* Label Tight — 26px mono 0.14em captions */
+        .mono-label-tight {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        /* Caption Mono — 24px footlines, tile ordinals */
+        .mono-caption {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        /* Axis Mono — 26px chart ticks */
+        .mono-axis {
+            font-family: var(--font-mono);
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+        }
+
+        /* Stat Figure — 220px KPI numeral */
+        .serif-stat {
+            font-family: var(--font-serif);
+            font-size: 220px;
+            font-weight: 500;
+            line-height: 0.92;
+            letter-spacing: -0.03em;
+        }
+
+        /* Stat Figure Unit — 110px suffix */
+        .serif-stat-unit {
+            font-family: var(--font-serif);
+            font-size: 110px;
+            font-weight: 500;
+            line-height: 0.92;
+        }
+
+        /* ===========================================
+           EDITORIAL FOREST — SURFACE & COLOR UTILITIES
+           =========================================== */
+        .surface-cream { background: var(--cream); }
+        .surface-green { background: var(--green); }
+        .surface-pink  { background: var(--pink); }
+        .fill-green-lite { background: var(--green-lite); }
+        .fill-cream-2 { background: var(--cream-2); }
+
+        .text-green  { color: var(--green); }
+        .text-green-deep { color: var(--green-deep); }
+        .text-pink   { color: var(--pink); }
+        .text-cream  { color: var(--cream); }
+        .text-ink    { color: var(--ink); }
+
+        /* ===========================================
+           EDITORIAL FOREST — COMPONENTS
+           =========================================== */
+
+        /* === TOPBAR ===
+           Flex row spanning top. Mono label left, monogram/counter right. */
+        .topbar {
+            position: absolute;
+            top: 48px;
+            left: 120px;
+            right: 120px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            z-index: 10;
+        }
+        .topbar.wide {
+            left: 140px;
+            right: 140px;
+        }
+
+        /* === MONOGRAM CIRCLE ===
+           130px outlined circle, 2px pink border, JetBrains Mono monogram. */
+        .monogram {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 2px solid var(--pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: var(--pink);
+            flex-shrink: 0;
+        }
+
+        /* === FOOTLINE ===
+           Absolute at bottom, mono caption row. */
+        .footline {
+            position: absolute;
+            bottom: 60px;
+            left: 120px;
+            right: 120px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+        }
+        .footline.wide {
+            left: 140px;
+            right: 140px;
+        }
+
+        /* === 2px HAIRLINE RULE === */
+        .rule-green {
+            border: none;
+            border-top: 2px solid var(--green);
+            margin: 0;
+        }
+        .rule-pink {
+            border: none;
+            border-top: 2px solid var(--pink);
+            margin: 0;
+        }
+
+        /* === TOPIC TILE ===
+           6px radius, 40px padding, holds mono ordinal + serif title + body + foot. */
+        .topic-tile {
+            border-radius: 6px;
+            padding: 40px 40px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+            min-width: 0;
+        }
+        .topic-tile.filled-green  { background: var(--green);  color: var(--cream); }
+        .topic-tile.filled-pink   { background: var(--pink);   color: var(--green-deep); }
+        .topic-tile.filled-lite   { background: var(--green-lite); color: var(--pink); }
+        .topic-tile.bordered      { background: var(--cream-2); border: 2px solid var(--green); color: var(--green); }
+
+        .topic-tile .tile-ordinal {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: inherit;
+            opacity: 0.7;
+        }
+        .topic-tile .tile-title {
+            font-family: var(--font-serif);
+            font-size: 56px;
+            font-weight: 500;
+            line-height: 0.98;
+            letter-spacing: -0.01em;
+            margin: 24px 0 20px;
+            color: inherit;
+        }
+        .topic-tile .tile-body {
+            font-family: var(--font-serif);
+            font-size: 26px;
+            font-weight: 400;
+            line-height: 1.34;
+            color: inherit;
+            opacity: 0.85;
+        }
+        .topic-tile .tile-foot {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: inherit;
+            opacity: 0.7;
+            margin-top: 24px;
+        }
+
+        /* === KPI BLOCK ===
+           Mono tag + serif figure + unit + description. Sits above 2px rule. */
+        .kpi-block {
+            text-align: center;
+            flex: 1;
+        }
+        .kpi-tag {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .kpi-figure {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 4px;
+        }
+        .kpi-desc {
+            font-family: var(--font-serif);
+            font-size: 30px;
+            font-weight: 400;
+            line-height: 1.32;
+            margin-top: 16px;
+        }
+
+        /* === STEP TILE ===
+           8px radius, 2.5px border, vertical stack. */
+        .step-tile {
+            border-radius: 8px;
+            padding: 40px 32px 32px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
+            min-height: 440px;
+        }
+        .step-tile.bordered-green { border: 2.5px solid var(--green); background: var(--cream); }
+        .step-tile.filled-green    { background: var(--green); }
+        .step-tile.filled-pink     { background: var(--pink); }
+
+        .step-tile .step-ordinal {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+        .step-tile .step-rule {
+            border: none;
+            border-top: 2px solid currentColor;
+            margin: 20px 0;
+            opacity: 0.5;
+        }
+        .step-tile .step-marker {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-top: auto;
+        }
+
+        /* === META DL ===
+           Three-column dt/dd with 2px top border */
+        .meta-row {
+            display: flex;
+            gap: 36px;
+            border-top: 2px solid var(--green);
+            padding-top: 28px;
+        }
+        .meta-item {
+            flex: 1;
+        }
+        .meta-item dt {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+        .meta-item dd {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        /* ===========================================
+           SLIDE LAYOUT HELPERS
+           =========================================== */
+        .slide-pad {
+            position: absolute;
+            inset: 0;
+            padding: 140px 120px 100px;
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-pad.wide {
+            padding: 150px 140px 110px;
+        }
+        .slide-pad.tall {
+            padding: 160px 120px 120px;
+        }
+
+        .flex-row { display: flex; gap: 28px; }
+        .flex-col { display: flex; flex-direction: column; }
+        .flex-1   { flex: 1; min-width: 0; }
+        .flex-wrap{ flex-wrap: wrap; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .text-center { text-align: center; }
+        .gap-24 { gap: 24px; }
+        .gap-36 { gap: 36px; }
+        .gap-60 { gap: 60px; }
+        .mt-auto { margin-top: auto; }
+        .mb-20  { margin-bottom: 20px; }
+        .mb-32  { margin-bottom: 32px; }
+        .mb-48  { margin-bottom: 48px; }
+        .mb-60  { margin-bottom: 60px; }
+
+        /* ===========================================
+           ANIMATIONS — Editorial: staggered fade-up reveals
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s var(--ease-out-expo),
+                        transform 0.7s var(--ease-out-expo);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal:nth-child(1) { transition-delay: 0.05s; }
+        .reveal:nth-child(2) { transition-delay: 0.12s; }
+        .reveal:nth-child(3) { transition-delay: 0.19s; }
+        .reveal:nth-child(4) { transition-delay: 0.26s; }
+        .reveal:nth-child(5) { transition-delay: 0.33s; }
+        .reveal:nth-child(6) { transition-delay: 0.40s; }
+        .reveal:nth-child(7) { transition-delay: 0.47s; }
+        .reveal:nth-child(8) { transition-delay: 0.54s; }
+
+        .reveal-kpi {
+            opacity: 0;
+            transform: scale(0.94);
+            transition: opacity 0.8s var(--ease-out-expo),
+                        transform 0.8s var(--ease-out-expo);
+        }
+        .slide.visible .reveal-kpi {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .reveal-kpi:nth-child(1) { transition-delay: 0.1s; }
+        .reveal-kpi:nth-child(2) { transition-delay: 0.2s; }
+        .reveal-kpi:nth-child(3) { transition-delay: 0.3s; }
+        .reveal-kpi:nth-child(4) { transition-delay: 0.4s; }
+
+        /* ===========================================
+           INLINE EDITING UI
+           =========================================== */
+        .edit-hotzone {
+            position: fixed; top: 0; left: 0;
+            width: 80px; height: 80px;
+            z-index: 10000;
+            cursor: pointer;
+        }
+        .edit-toggle {
+            position: fixed; top: 12px; left: 12px;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--pink);
+            background: var(--green);
+            color: var(--cream);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10001;
+        }
+        .edit-toggle.show,
+        .edit-toggle.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ===========================================
+           NAVIGATION HINT
+           =========================================== */
+        .nav-hint {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cream);
+            opacity: 0.5;
+            z-index: 500;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        /* ===========================================
+           PROGRESS DOTS
+           =========================================== */
+        .progress-dots {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 500;
+        }
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cream);
+            opacity: 0.25;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+        }
+        .progress-dot.active {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-viewport">
+        <main class="deck-stage" id="deckStage">
+
+            <!-- ===========================================
+                 SLIDE 1: COVER (Green Surface)
+                 =========================================== -->
+            <section class="slide active surface-green">
+                <div class="topbar wide">
+                    <span class="mono-label text-pink">INFOSYS × KHC CHINA</span>
+                    <div class="monogram">IS</div>
+                </div>
+                <div class="slide-pad wide" style="justify-content: flex-end; padding-bottom: 160px;">
+                    <div class="reveal" style="margin-bottom: 12px;">
+                        <span class="mono-label text-pink" style="font-size: 24px; letter-spacing: 0.16em;">SOLUTION PROPOSAL · JUNE 2026</span>
+                    </div>
+                    <h1 class="reveal serif-hero text-cream" style="max-width: 1400px;">
+                        AI-Powered<br>Sales Coach
+                    </h1>
+                    <p class="reveal serif-body-lg text-pink" style="margin-top: 32px; max-width: 900px;">
+                        An intelligent, always-available assistant for the Kraft Heinz China field sales team — powered by personal memory, menu analysis, and predictive coaching.
+                    </p>
+                </div>
+                <div class="footline wide">
+                    <span class="mono-caption text-pink">KRAFT HEINZ CHINA — FOODSERVICE</span>
+                    <span class="mono-caption text-pink">SLIDE 1 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 2: EXECUTIVE SUMMARY (Cream Surface)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">EXECUTIVE SUMMARY</span>
+                    <span class="mono-caption text-green">02</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">The Strategic Challenge</h2>
+                    <div class="reveal flex-row gap-36" style="flex: 1;">
+                        <div class="flex-1 flex-col" style="gap: 28px;">
+                            <p class="serif-body-lg text-ink">
+                                KHC China aims to become a leader in the Chinese sauce market — a ¥4,981 billion category growing at 7.0% CAGR. But the field sales team needs better tools to compete against established local players.
+                            </p>
+                            <p class="serif-body text-ink" style="opacity: 0.7;">
+                                Sales representatives must learn product knowledge on-the-go, recommend the right KHC sauces based on restaurant menus, and access training via mobile — not desktop.
+                            </p>
+                        </div>
+                        <div class="flex-1 flex-col gap-24">
+                            <div class="topic-tile filled-green">
+                                <span class="tile-ordinal">CHALLENGE 01</span>
+                                <span class="tile-title" style="font-size: 44px;">Knowledge Gap</span>
+                                <span class="tile-body">Field team lacks instant access to product specs, sales scripts, and competitive positioning</span>
+                            </div>
+                            <div class="topic-tile filled-pink">
+                                <span class="tile-ordinal">CHALLENGE 02</span>
+                                <span class="tile-title" style="font-size: 44px;">Menu Complexity</span>
+                                <span class="tile-body">No data-driven way to match KHC products to diverse Chinese restaurant menus</span>
+                            </div>
+                            <div class="topic-tile bordered">
+                                <span class="tile-ordinal">CHALLENGE 03</span>
+                                <span class="tile-title" style="font-size: 44px;">Mobile-First Need</span>
+                                <span class="tile-body">Learning must happen in the field, on the phone, between customer visits</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 2 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 3: BUSINESS OUTCOMES (Green Surface)
+                 =========================================== -->
+            <section class="slide surface-green">
+                <div class="topbar wide">
+                    <span class="mono-label text-pink">BUSINESS OUTCOMES</span>
+                    <div class="monogram">IS</div>
+                </div>
+                <div class="slide-pad wide" style="justify-content: center;">
+                    <h2 class="reveal serif-h text-cream mb-60">Projected Impact</h2>
+                    <div class="reveal" style="border-top: 2px solid var(--pink); padding-top: 48px; margin-bottom: 48px;"></div>
+                    <div class="reveal flex-row gap-60">
+                        <div class="kpi-block">
+                            <div class="kpi-tag text-pink">Product Knowledge</div>
+                            <div class="kpi-figure">
+                                <span class="serif-stat text-cream">30</span>
+                                <span class="serif-stat-unit text-pink">%+</span>
+                            </div>
+                            <div class="kpi-desc text-cream" style="opacity: 0.75;">Improvement in sales team product knowledge</div>
+                        </div>
+                        <div class="kpi-block">
+                            <div class="kpi-tag text-pink">Revenue per Rep</div>
+                            <div class="kpi-figure">
+                                <span class="serif-stat text-cream">20</span>
+                                <span class="serif-stat-unit text-pink">%+</span>
+                            </div>
+                            <div class="kpi-desc text-cream" style="opacity: 0.75;">Increase in sauce category revenue per sales rep</div>
+                        </div>
+                        <div class="kpi-block">
+                            <div class="kpi-tag text-pink">Ramp-Up Time</div>
+                            <div class="kpi-figure">
+                                <span class="serif-stat text-cream">50</span>
+                                <span class="serif-stat-unit text-pink">%+</span>
+                            </div>
+                            <div class="kpi-desc text-cream" style="opacity: 0.75;">Reduction in new hire ramp-up time</div>
+                        </div>
+                        <div class="kpi-block">
+                            <div class="kpi-tag text-pink">Monthly Active</div>
+                            <div class="kpi-figure">
+                                <span class="serif-stat text-cream">80</span>
+                                <span class="serif-stat-unit text-pink">%+</span>
+                            </div>
+                            <div class="kpi-desc text-cream" style="opacity: 0.75;">Monthly active usage among field sales team</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline wide">
+                    <span class="mono-caption text-pink">PROJECTED OUTCOMES — BASED ON INDUSTRY BENCHMARKS</span>
+                    <span class="mono-caption text-pink">SLIDE 3 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 4: FOUR CAPABILITIES (Cream Surface)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">CORE CAPABILITIES</span>
+                    <span class="mono-caption text-green">04</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Four Interconnected Capabilities</h2>
+                    <div class="reveal flex-row gap-28" style="flex: 1;">
+                        <div class="topic-tile filled-green flex-1">
+                            <span class="tile-ordinal">CAPABILITY 01</span>
+                            <span class="tile-title">AI Sales<br>Coach</span>
+                            <span class="tile-body">Real-time conversational AI teaching sales techniques, product knowledge, objection handling, and competitive positioning — on demand.</span>
+                            <span class="tile-foot">Conversational · Contextual</span>
+                        </div>
+                        <div class="topic-tile filled-pink flex-1">
+                            <span class="tile-ordinal">CAPABILITY 02</span>
+                            <span class="tile-title">Personal<br>Memory</span>
+                            <span class="tile-body">Each user has a dedicated memory recording preferences, successes, and learning progress — dynamically retrieved for ever-improving personalization.</span>
+                            <span class="tile-foot">Evolving · Individual</span>
+                        </div>
+                        <div class="topic-tile filled-lite flex-1">
+                            <span class="tile-ordinal">CAPABILITY 03</span>
+                            <span class="tile-title">Menu<br>Recommender</span>
+                            <span class="tile-body">Photo-based menu recognition with taste profile analysis, matching KHC products to restaurant dishes with innovation suggestions.</span>
+                            <span class="tile-foot">Visual · Analytical</span>
+                        </div>
+                        <div class="topic-tile bordered flex-1">
+                            <span class="tile-ordinal">CAPABILITY 04</span>
+                            <span class="tile-title">Mobile<br>Learning Hub</span>
+                            <span class="tile-body">Bite-sized 3–5 minute learning modules, voice-enabled for hands-free interaction, accessible via WeChat Work or Mini Program.</span>
+                            <span class="tile-foot">Mobile · Voice-Ready</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 4 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 5: INNOVATION — PERSONAL MEMORY (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">INNOVATION HIGHLIGHT</span>
+                    <span class="mono-caption text-green">05</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Personal Memory Architecture</h2>
+                    <p class="reveal serif-body-lg text-ink mb-48" style="max-width: 1100px;">
+                        Not a generic chatbot — it's <span style="color: var(--green);">YOUR</span> AI coach. The system learns strengths, weaknesses, preferences, and successful patterns, providing increasingly personalized guidance over time.
+                    </p>
+                    <div class="reveal flex-row gap-24" style="flex: 1;">
+                        <div class="step-tile bordered-green flex-1">
+                            <span class="step-ordinal text-green">STEP 01</span>
+                            <span class="serif-tc text-green">Memory Extraction</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 16px;">Captures what products the user asks about, which recommendations are accepted, learning modules completed, and customer feedback received.</p>
+                            <hr class="step-rule">
+                            <span class="step-marker text-green">Extraction Engine</span>
+                        </div>
+                        <div class="step-tile filled-green flex-1">
+                            <span class="step-ordinal text-pink">STEP 02</span>
+                            <span class="serif-tc text-cream">Memory Store</span>
+                            <p class="serif-body-card text-cream" style="margin-top: 16px; opacity: 0.85;">Product preferences, learning progress, success patterns, customer feedback, weakness areas, and context history — all stored per user.</p>
+                            <hr class="step-rule" style="border-color: var(--pink);">
+                            <span class="step-marker text-pink">Six Memory Dimensions</span>
+                        </div>
+                        <div class="step-tile filled-pink flex-1">
+                            <span class="step-ordinal text-green-deep">STEP 03</span>
+                            <span class="serif-tc text-green-deep">Continuous Iteration</span>
+                            <p class="serif-body-card text-green-deep" style="margin-top: 16px;">Old patterns update with new data. Confidence scores adjust. Irrelevant memories decay. New insights are continuously incorporated.</p>
+                            <hr class="step-rule" style="border-color: var(--green-deep);">
+                            <span class="step-marker text-green-deep">Self-Improving</span>
+                        </div>
+                        <div class="step-tile bordered-green flex-1">
+                            <span class="step-ordinal text-green">STEP 04</span>
+                            <span class="serif-tc text-green">Predictive Activation</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 16px;">Memory is retrieved proactively before sales visits — surfacing relevant knowledge, flagging gaps, and preparing personalized coaching briefs.</p>
+                            <hr class="step-rule">
+                            <span class="step-marker text-green">Proactive · Contextual</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 5 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 6: INNOVATION — MENU ANALYSIS (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">INNOVATION HIGHLIGHT</span>
+                    <span class="mono-caption text-green">06</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Intelligent Menu Analysis</h2>
+                    <p class="reveal serif-body-lg text-ink mb-48" style="max-width: 1100px;">
+                        Photo recognition + OCR + taste profile analysis. Not just "what products to use" but <span style="color: var(--green);">why they fit this menu</span> — with innovation suggestions for new dishes.
+                    </p>
+                    <div class="reveal flex-row items-center gap-36" style="flex: 1;">
+                        <!-- Flow diagram using styled tiles -->
+                        <div class="flex-col items-center gap-20 flex-1">
+                            <div class="topic-tile filled-green" style="width: 100%; text-align: center; align-items: center;">
+                                <span class="tile-ordinal">INPUT</span>
+                                <span class="tile-title" style="font-size: 40px;">Menu Photo</span>
+                                <span class="tile-body">Camera capture from WeChat Work or Mini Program</span>
+                            </div>
+                        </div>
+                        <span class="serif-stat text-green" style="font-size: 64px; opacity: 0.4;">→</span>
+                        <div class="flex-col items-center gap-20 flex-1">
+                            <div class="topic-tile filled-pink" style="width: 100%; text-align: center; align-items: center;">
+                                <span class="tile-ordinal">PROCESS</span>
+                                <span class="tile-title" style="font-size: 40px;">OCR + Taste Analysis</span>
+                                <span class="tile-body">Extract dish names → identify cuisine type → analyze taste profiles</span>
+                            </div>
+                        </div>
+                        <span class="serif-stat text-green" style="font-size: 64px; opacity: 0.4;">→</span>
+                        <div class="flex-col items-center gap-20 flex-1">
+                            <div class="topic-tile filled-lite" style="width: 100%; text-align: center; align-items: center;">
+                                <span class="tile-ordinal">OUTPUT</span>
+                                <span class="tile-title" style="font-size: 40px;">KHC Product Match</span>
+                                <span class="tile-body">Recommendations with rationale + innovation suggestions for new menu items</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reveal flex-row gap-36 mt-auto" style="margin-top: 40px;">
+                        <div style="flex: 1; border-top: 2px solid var(--green); padding-top: 20px;">
+                            <span class="mono-caption text-green">EXAMPLE</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 8px;">
+                                "I've analyzed this Sichuan menu. Taste profile: Spicy (7/10), Numbing (8/10). Recommend <span style="color: var(--green);">KHC Chili Garlic Sauce</span> for Mapo Tofu — enhances heat while adding depth."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 6 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 7: PREDICTIVE COACHING + SUCCESS PATTERNS (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">INNOVATION HIGHLIGHT</span>
+                    <span class="mono-caption text-green">07</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Predictive Coaching &amp; Pattern Mining</h2>
+                    <div class="reveal flex-row gap-28" style="flex: 1;">
+                        <div class="step-tile filled-green flex-1">
+                            <span class="step-ordinal text-pink">PREDICTIVE COACHING</span>
+                            <span class="serif-tc text-cream" style="font-size: 52px;">Proactive Preparation</span>
+                            <p class="serif-body-card text-cream" style="margin-top: 16px; opacity: 0.85;">
+                                AI identifies knowledge gaps before sales visits. Pushes relevant content based on upcoming customer context. Transforms reactive learning into proactive preparation.
+                            </p>
+                            <hr class="step-rule" style="border-color: var(--pink);">
+                            <p class="serif-body-card text-pink" style="font-style: normal;">
+                                "You're visiting a Sichuan hotpot chain tomorrow. Based on your memory, here's a 5-minute briefing on chili-based products and three successful case studies."
+                            </p>
+                        </div>
+                        <div class="step-tile filled-pink flex-1">
+                            <span class="step-ordinal text-green-deep">PATTERN MINING</span>
+                            <span class="serif-tc text-green-deep" style="font-size: 52px;">Success Replication</span>
+                            <p class="serif-body-card text-green-deep" style="margin-top: 16px;">
+                                Aggregates successful patterns across the sales team. Identifies what works and replicates it. Creates a living knowledge base of proven strategies.
+                            </p>
+                            <hr class="step-rule" style="border-color: var(--green-deep);">
+                            <p class="serif-body-card text-green-deep">
+                                "Manager Zhang exceeded targets 3 months consecutively in hotpot: lead with cost-per-serving analysis, then demonstrate taste differentiation. Close rate: 85%."
+                            </p>
+                        </div>
+                        <div class="step-tile bordered-green flex-1">
+                            <span class="step-ordinal text-green">CONTEXTUAL LEARNING</span>
+                            <span class="serif-tc text-green" style="font-size: 52px;">In the Flow of Work</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 16px;">
+                                Learning triggered by real situations — not scheduled modules. Knowledge is immediately applicable. Content surfaces exactly when the rep needs it.
+                            </p>
+                            <hr class="step-rule">
+                            <p class="serif-body-card text-green">
+                                "Customer mentions switching to a competitor? AI instantly provides competitive talking points, switching-cost analysis, and relevant success stories."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 7 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 8: SOLUTION ARCHITECTURE (Green Surface)
+                 =========================================== -->
+            <section class="slide surface-green">
+                <div class="topbar wide">
+                    <span class="mono-label text-pink">SOLUTION ARCHITECTURE</span>
+                    <div class="monogram">IS</div>
+                </div>
+                <div class="slide-pad wide">
+                    <h2 class="reveal serif-h text-cream mb-48">High-Level Architecture</h2>
+                    <div class="reveal" style="border-top: 2px solid var(--pink); padding-top: 40px; margin-bottom: 40px;"></div>
+                    <div class="reveal flex-row gap-28" style="flex: 1;">
+                        <div class="flex-col gap-24 flex-1">
+                            <div class="topic-tile filled-pink" style="flex: none;">
+                                <span class="tile-ordinal">LAYER 01</span>
+                                <span class="tile-title" style="font-size: 40px;">Mobile Client</span>
+                                <span class="tile-body">WeChat Work Application &amp; Mini Program with camera access, voice input, and offline caching capability.</span>
+                            </div>
+                            <div class="topic-tile filled-lite" style="flex: none;">
+                                <span class="tile-ordinal">LAYER 02</span>
+                                <span class="tile-title" style="font-size: 40px;">API Gateway</span>
+                                <span class="tile-body">WeChat Work SSO authentication, rate limiting, request routing, API versioning — Kong or AWS API Gateway.</span>
+                            </div>
+                        </div>
+                        <div class="flex-col gap-24 flex-1">
+                            <div class="topic-tile" style="flex: none; background: var(--cream);">
+                                <span class="tile-ordinal" style="color: var(--green);">LAYER 03</span>
+                                <span class="tile-title" style="font-size: 40px; color: var(--green);">AI / LLM Service</span>
+                                <span class="tile-body" style="color: var(--ink);">DeepSeek-V3.2 (primary) / Qwen (backup) — conversational AI, menu analysis, predictive coaching engine.</span>
+                            </div>
+                            <div class="topic-tile" style="flex: none; background: var(--cream-2); border: 2px solid var(--green);">
+                                <span class="tile-ordinal" style="color: var(--green);">LAYER 04</span>
+                                <span class="tile-title" style="font-size: 40px; color: var(--green);">Knowledge Service</span>
+                                <span class="tile-body" style="color: var(--ink);">Content management, product lookup, semantic search via Milvus vector database — built on Marketing KB + Sales Playbook.</span>
+                            </div>
+                        </div>
+                        <div class="flex-col gap-24 flex-1">
+                            <div class="topic-tile filled-pink" style="flex: none;">
+                                <span class="tile-ordinal">LAYER 05</span>
+                                <span class="tile-title" style="font-size: 40px;">Memory Service</span>
+                                <span class="tile-body">User memory management, pattern mining, learning tracking — personal memory extraction &amp; iteration engine.</span>
+                            </div>
+                            <div class="topic-tile filled-green" style="flex: none;">
+                                <span class="tile-ordinal">LAYER 06</span>
+                                <span class="tile-title" style="font-size: 40px;">Data Layer</span>
+                                <span class="tile-body">PostgreSQL (relational) + Milvus (vector) + OSS (object storage) + Redis (cache). AWS China / Alibaba Cloud.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline wide">
+                    <span class="mono-caption text-pink">MICROSERVICES ARCHITECTURE — HORIZONTAL SCALING</span>
+                    <span class="mono-caption text-pink">SLIDE 8 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 9: KEY FEATURES — PHASE 1 (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">KEY FEATURES — PHASE 1</span>
+                    <span class="mono-caption text-green">09</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">MVP: Core Foundations</h2>
+                    <div class="reveal flex-row gap-28" style="flex: 1;">
+                        <div class="step-tile filled-green flex-1">
+                            <span class="step-ordinal text-pink">FEATURE 1.1</span>
+                            <span class="serif-tc text-cream" style="font-size: 52px;">AI Sales Coach</span>
+                            <p class="serif-body-card text-cream" style="margin-top: 16px; opacity: 0.85;">
+                                Ask questions about products, get sales scripts and talk tracks, receive objection handling guidance, access competitive comparison information.
+                            </p>
+                            <hr class="step-rule" style="border-color: var(--pink);">
+                            <p class="serif-body-card text-pink" style="font-style: normal;">
+                                "The restaurant owner says Lee Kum Kee is cheaper. What should I say?" → AI provides cost-per-serving analysis, taste differentiation, and success stories.
+                            </p>
+                        </div>
+                        <div class="step-tile filled-pink flex-1">
+                            <span class="step-ordinal text-green-deep">FEATURE 1.2</span>
+                            <span class="serif-tc text-green-deep" style="font-size: 52px;">Menu Recommender</span>
+                            <p class="serif-body-card text-green-deep" style="margin-top: 16px;">
+                                Capture menu photo for automatic analysis. Manual text input as alternative. Dish recognition, taste profiling, product matching with rationale.
+                            </p>
+                            <hr class="step-rule" style="border-color: var(--green-deep);">
+                            <p class="serif-body-card text-green-deep">
+                                Innovation suggestions for new menu items using KHC products — e.g., "Fusion Mapo Tofu with Chili Garlic Sauce + Italian herbs."
+                            </p>
+                        </div>
+                        <div class="step-tile bordered-green flex-1">
+                            <span class="step-ordinal text-green">FEATURE 1.3</span>
+                            <span class="serif-tc text-green" style="font-size: 52px;">Voice-Enabled</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 16px;">
+                                Voice input for questions. Voice output for responses. Hands-free operation during transit between customer visits.
+                            </p>
+                            <hr class="step-rule">
+                            <span class="step-marker text-green">Mobile-First · Always-On</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">PHASE 1 MVP — 4 MONTHS TO LAUNCH</span>
+                    <span class="mono-caption text-green">SLIDE 9 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 10: KEY FEATURES — PHASE 2 (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">KEY FEATURES — PHASE 2</span>
+                    <span class="mono-caption text-green">10</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Enhancement: Advanced Intelligence</h2>
+                    <div class="reveal flex-row gap-28" style="flex: 1;">
+                        <div class="topic-tile filled-green flex-1">
+                            <span class="tile-ordinal">2.1</span>
+                            <span class="tile-title" style="font-size: 40px;">Personal Memory System</span>
+                            <span class="tile-body">Automatic memory extraction from every interaction. Retrieves user preferences for personalized recommendations. Confidence scoring on memory accuracy.</span>
+                            <span class="tile-foot">Individual · Evolving</span>
+                        </div>
+                        <div class="topic-tile filled-pink flex-1">
+                            <span class="tile-ordinal">2.2</span>
+                            <span class="tile-title" style="font-size: 40px;">Predictive Coaching</span>
+                            <span class="tile-body">Analyzes upcoming visit schedule. Identifies knowledge gaps from personal memory. Generates personalized preparation briefs before visits.</span>
+                            <span class="tile-foot">Proactive · Context-Aware</span>
+                        </div>
+                        <div class="topic-tile filled-lite flex-1">
+                            <span class="tile-ordinal">2.3</span>
+                            <span class="tile-title" style="font-size: 40px;">Success Pattern Mining</span>
+                            <span class="tile-body">Aggregates successful interactions across team. Extracts and shares best practices. Surfaces top performers' strategies for replication.</span>
+                            <span class="tile-foot">Team-Wide · Data-Driven</span>
+                        </div>
+                        <div class="topic-tile bordered flex-1">
+                            <span class="tile-ordinal">2.4</span>
+                            <span class="tile-title" style="font-size: 40px;">Mobile Learning Hub</span>
+                            <span class="tile-body">3–5 minute micro-modules. Content drawn from Marketing Knowledge Base. Progress tracking with personalized learning paths.</span>
+                            <span class="tile-foot">Bite-Sized · On-the-Go</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">PHASE 2 ENHANCEMENT — 3 MONTHS</span>
+                    <span class="mono-caption text-green">SLIDE 10 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 11: IMPLEMENTATION PLAN (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">IMPLEMENTATION APPROACH</span>
+                    <span class="mono-caption text-green">11</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Phased Delivery — 7 Months Total</h2>
+                    <div class="reveal flex-row gap-36" style="flex: 1;">
+                        <div class="flex-1 flex-col gap-24">
+                            <div class="step-tile filled-green" style="min-height: auto; flex: 1;">
+                                <span class="step-ordinal text-pink">PHASE 1 · 4 MONTHS</span>
+                                <span class="serif-tc text-cream" style="font-size: 48px;">MVP</span>
+                                <p class="serif-body-card text-cream" style="margin-top: 12px; opacity: 0.85;">
+                                    Sales Coach + Menu Recommender with image recognition + Voice interaction
+                                </p>
+                                <hr class="step-rule" style="border-color: var(--pink);">
+                                <div class="flex-col gap-12">
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-pink" style="font-size: 20px;">M1</span>
+                                        <span class="serif-body-card text-cream" style="font-size: 22px;">Requirements &amp; Design — 4 weeks</span>
+                                    </div>
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-pink" style="font-size: 20px;">M2</span>
+                                        <span class="serif-body-card text-cream" style="font-size: 22px;">Core Development — 8 weeks</span>
+                                    </div>
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-pink" style="font-size: 20px;">M3</span>
+                                        <span class="serif-body-card text-cream" style="font-size: 22px;">Integration &amp; Testing — 4 weeks</span>
+                                    </div>
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-pink" style="font-size: 20px;">M4</span>
+                                        <span class="serif-body-card text-cream" style="font-size: 22px;">Pilot Launch — 20–30 users</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 flex-col gap-24">
+                            <div class="step-tile filled-pink" style="min-height: auto; flex: 1;">
+                                <span class="step-ordinal text-green-deep">PHASE 2 · 3 MONTHS</span>
+                                <span class="serif-tc text-green-deep" style="font-size: 48px;">Enhancement</span>
+                                <p class="serif-body-card text-green-deep" style="margin-top: 12px;">
+                                    Personal Memory + Predictive Coaching + Success Pattern Mining + Learning Hub
+                                </p>
+                                <hr class="step-rule" style="border-color: var(--green-deep);">
+                                <div class="flex-col gap-12">
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-green-deep" style="font-size: 20px;">M5</span>
+                                        <span class="serif-body-card text-green-deep" style="font-size: 22px;">Memory System — 4 weeks</span>
+                                    </div>
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-green-deep" style="font-size: 20px;">M6</span>
+                                        <span class="serif-body-card text-green-deep" style="font-size: 22px;">Advanced Features — 6 weeks</span>
+                                    </div>
+                                    <div class="flex-row items-center gap-16">
+                                        <span class="mono-caption text-green-deep" style="font-size: 20px;">M7</span>
+                                        <span class="serif-body-card text-green-deep" style="font-size: 22px;">Full Rollout — 2 weeks</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="topic-tile bordered" style="flex: none;">
+                                <span class="tile-ordinal text-green">OUTCOME</span>
+                                <span class="tile-title text-green" style="font-size: 36px;">Validate core value → Deepen engagement → Scale</span>
+                                <span class="tile-body text-ink">Phase 1 establishes usage habits. Phase 2 delivers advanced intelligence. Each phase builds on learnings from the previous.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 11 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 12: TECHNOLOGY STACK (Green Surface)
+                 =========================================== -->
+            <section class="slide surface-green">
+                <div class="topbar wide">
+                    <span class="mono-label text-pink">TECHNOLOGY STACK</span>
+                    <div class="monogram">IS</div>
+                </div>
+                <div class="slide-pad wide">
+                    <h2 class="reveal serif-h text-cream mb-48">Why DeepSeek &amp; Modern Stack</h2>
+                    <div class="reveal" style="border-top: 2px solid var(--pink); padding-top: 40px; margin-bottom: 36px;"></div>
+                    <div class="reveal flex-row gap-36" style="flex: 1;">
+                        <div class="flex-col gap-28 flex-2">
+                            <div class="flex-col gap-20">
+                                <span class="mono-label text-pink" style="font-size: 22px;">LLM COMPARISON</span>
+                                <div style="display: flex; gap: 0;">
+                                    <div style="flex: 1; border-bottom: 2px solid var(--pink); padding-bottom: 16px;">
+                                        <span class="mono-caption text-pink" style="font-size: 20px;">factor</span>
+                                    </div>
+                                    <div style="flex: 1; border-bottom: 2px solid var(--cream); padding-bottom: 16px; text-align: center;">
+                                        <span class="mono-caption text-cream" style="font-size: 20px;">DeepSeek-V3.2</span>
+                                    </div>
+                                    <div style="flex: 1; border-bottom: 2px solid var(--cream); padding-bottom: 16px; text-align: center; opacity: 0.5;">
+                                        <span class="mono-caption text-cream" style="font-size: 20px;">GPT-4o</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0;">
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2);">
+                                        <span class="serif-body-card text-cream">Input Cost / M tokens</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center;">
+                                        <span class="serif-body-card text-pink">$0.27</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center; opacity: 0.5;">
+                                        <span class="serif-body-card text-cream">$2.50</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0;">
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2);">
+                                        <span class="serif-body-card text-cream">Output Cost / M tokens</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center;">
+                                        <span class="serif-body-card text-pink">$0.41</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center; opacity: 0.5;">
+                                        <span class="serif-body-card text-cream">$10.00</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0;">
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2);">
+                                        <span class="serif-body-card text-cream">Chinese Capability</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center;">
+                                        <span class="serif-body-card text-pink">Excellent</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center; opacity: 0.5;">
+                                        <span class="serif-body-card text-cream">Good</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0;">
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2);">
+                                        <span class="serif-body-card text-cream">China Deployable</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center;">
+                                        <span class="serif-body-card text-pink">Yes</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; border-bottom: 1px solid rgba(232,156,177,0.2); text-align: center; opacity: 0.5;">
+                                        <span class="serif-body-card text-cream">No</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0;">
+                                    <div style="flex: 1; padding: 14px 0;">
+                                        <span class="serif-body-card text-cream">Open Source</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; text-align: center;">
+                                        <span class="serif-body-card text-pink">Yes</span>
+                                    </div>
+                                    <div style="flex: 1; padding: 14px 0; text-align: center; opacity: 0.5;">
+                                        <span class="serif-body-card text-cream">No</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-col gap-24 flex-1">
+                            <div class="topic-tile filled-pink" style="flex: none;">
+                                <span class="tile-ordinal">STACK</span>
+                                <span class="tile-title" style="font-size: 36px;">Core Components</span>
+                                <span class="tile-body">DeepSeek-V3.2 / Qwen · FastAPI (Python) · WeChat Work · Milvus · PostgreSQL · Redis · Baidu/Tencent OCR · AWS China / Alibaba Cloud</span>
+                            </div>
+                            <div class="topic-tile filled-lite" style="flex: none;">
+                                <span class="tile-ordinal">COMPLIANCE</span>
+                                <span class="tile-title" style="font-size: 36px;">Enterprise Grade</span>
+                                <span class="tile-body">PIPL data residency in mainland China. TLS 1.2+ encryption. AES-256 at rest. RBAC access control. 99.5% uptime SLA.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline wide">
+                    <span class="mono-caption text-pink">DEEPSEEK: 1/10–1/30 THE COST OF GPT-4O · 164K CONTEXT WINDOW</span>
+                    <span class="mono-caption text-pink">SLIDE 12 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 13: WHY INFOSYS (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">WHY INFOSYS</span>
+                    <span class="mono-caption text-green">13</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">The Right Partner for KHC China</h2>
+                    <div class="reveal flex-row gap-28" style="flex: 1;">
+                        <div class="topic-tile filled-green flex-1">
+                            <span class="tile-ordinal">01</span>
+                            <span class="tile-title" style="font-size: 40px;">Existing Relationship</span>
+                            <span class="tile-body">Infosys already manages KHC's global Data and AI platforms — deep understanding of technology landscape, governance, and enterprise architecture.</span>
+                            <span class="tile-foot">Established · Trusted</span>
+                        </div>
+                        <div class="topic-tile filled-pink flex-1">
+                            <span class="tile-ordinal">02</span>
+                            <span class="tile-title" style="font-size: 40px;">Global + Local</span>
+                            <span class="tile-body">Global AI expertise combined with deep China market understanding. Local team with knowledge of Chinese regulations, market dynamics, and WeChat ecosystem.</span>
+                            <span class="tile-foot">Bilingual · Bicultural</span>
+                        </div>
+                        <div class="topic-tile bordered flex-1">
+                            <span class="tile-ordinal">03</span>
+                            <span class="tile-title" style="font-size: 40px;">Platform Approach</span>
+                            <span class="tile-body">Not just an app — a scalable platform that can expand to other markets. Pre-built components accelerate time-to-value with enterprise-grade security.</span>
+                            <span class="tile-foot">Scalable · Future-Ready</span>
+                        </div>
+                        <div class="topic-tile filled-lite flex-1">
+                            <span class="tile-ordinal">04</span>
+                            <span class="tile-title" style="font-size: 40px;">Innovation Focus</span>
+                            <span class="tile-body">Proprietary frameworks for Personal Memory, Predictive Coaching, and Success Pattern Mining — capabilities not available in off-the-shelf solutions.</span>
+                            <span class="tile-foot">Differentiated · Proprietary</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">KHC CHINA — AI SALES COACH</span>
+                    <span class="mono-caption text-green">SLIDE 13 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 14: RISK MITIGATION (Cream)
+                 =========================================== -->
+            <section class="slide surface-cream">
+                <div class="topbar">
+                    <span class="mono-label text-green">RISK MITIGATION</span>
+                    <span class="mono-caption text-green">14</span>
+                </div>
+                <div class="slide-pad">
+                    <h2 class="reveal serif-hxl text-green mb-48">Key Risks &amp; Mitigations</h2>
+                    <div class="reveal flex-row gap-28" style="flex: 1; flex-wrap: wrap;">
+                        <div class="step-tile bordered-green" style="flex: 0 0 calc(50% - 14px); min-height: 200px;">
+                            <span class="step-ordinal text-green">RISK 01</span>
+                            <span class="serif-tc text-green" style="font-size: 40px;">Knowledge Base Quality</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 12px;">Early assessment of content; recommend content remediation if needed before ingestion pipeline.</p>
+                        </div>
+                        <div class="step-tile filled-green" style="flex: 0 0 calc(50% - 14px); min-height: 200px;">
+                            <span class="step-ordinal text-pink">RISK 02</span>
+                            <span class="serif-tc text-cream" style="font-size: 40px;">AI Hallucination</span>
+                            <p class="serif-body-card text-cream" style="margin-top: 12px; opacity: 0.85;">Human-in-the-loop validation; confidence scoring; RAG-based grounding in verified knowledge base content.</p>
+                        </div>
+                        <div class="step-tile filled-pink" style="flex: 0 0 calc(50% - 14px); min-height: 200px;">
+                            <span class="step-ordinal text-green-deep">RISK 03</span>
+                            <span class="serif-tc text-green-deep" style="font-size: 40px;">Low User Adoption</span>
+                            <p class="serif-body-card text-green-deep" style="margin-top: 12px;">Involve sales reps in design; gamification elements; manager sponsorship and internal champions.</p>
+                        </div>
+                        <div class="step-tile bordered-green" style="flex: 0 0 calc(50% - 14px); min-height: 200px;">
+                            <span class="step-ordinal text-green">RISK 04</span>
+                            <span class="serif-tc text-green" style="font-size: 40px;">Data Privacy</span>
+                            <p class="serif-body-card text-ink" style="margin-top: 12px;">PIPL compliance audit; data encryption in transit and at rest; role-based access controls throughout.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footline">
+                    <span class="mono-caption text-green">PROACTIVE RISK MANAGEMENT THROUGHOUT DELIVERY</span>
+                    <span class="mono-caption text-green">SLIDE 14 / 15</span>
+                </div>
+            </section>
+
+            <!-- ===========================================
+                 SLIDE 15: CLOSING (Green Surface)
+                 =========================================== -->
+            <section class="slide surface-green">
+                <div class="topbar wide">
+                    <span class="mono-label text-pink">THANK YOU</span>
+                    <div class="monogram">IS</div>
+                </div>
+                <div class="slide-pad wide" style="justify-content: center; padding-bottom: 200px;">
+                    <div class="reveal" style="margin-bottom: 20px;">
+                        <span class="mono-label text-pink" style="font-size: 24px;">INFOSYS × KRAFT HEINZ CHINA</span>
+                    </div>
+                    <h2 class="reveal serif-hero text-cream" style="max-width: 1200px;">
+                        Let's Build<br>the Future of<br>Sales Coaching
+                    </h2>
+                    <p class="reveal serif-body-lg text-pink" style="margin-top: 40px; max-width: 800px;">
+                        AI-powered, mobile-first, and personally tailored — a platform that grows smarter with every interaction.
+                    </p>
+                </div>
+                <div class="footline wide">
+                    <span class="mono-caption text-pink">SOLUTION PROPOSAL — JUNE 2026</span>
+                    <span class="mono-caption text-pink">SLIDE 15 / 15</span>
+                </div>
+            </section>
+
+        </main><!-- /deck-stage -->
+    </div><!-- /deck-viewport -->
+
+    <!-- ===========================================
+         NAVIGATION HINT
+         =========================================== -->
+    <div class="nav-hint" id="navHint">← → ARROW KEYS TO NAVIGATE</div>
+
+    <!-- ===========================================
+         PROGRESS DOTS
+         =========================================== -->
+    <div class="progress-dots" id="progressDots"></div>
+
+    <!-- ===========================================
+         INLINE EDITING UI
+         =========================================== -->
+    <div class="edit-hotzone"></div>
+    <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✎</button>
+
+    <script>
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.stage = document.getElementById('deckStage');
+                this.navHint = document.getElementById('navHint');
+                this.progressDots = document.getElementById('progressDots');
+
+                this.setupStageScale();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupMouseWheel();
+                this.setupProgressDots();
+                this.showSlide(0);
+                this.hideNavHintAfterDelay();
+            }
+
+            /* --- Stage Scaling: 1920×1080 fits viewport --- */
+            setupStageScale() {
+                const scale = () => {
+                    const factor = Math.min(
+                        window.innerWidth / 1920,
+                        window.innerHeight / 1080
+                    );
+                    const x = (window.innerWidth - 1920 * factor) / 2;
+                    const y = (window.innerHeight - 1080 * factor) / 2;
+                    this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+                };
+                scale();
+                window.addEventListener('resize', scale);
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(scale, 100);
+                });
+            }
+
+            /* --- Keyboard Navigation --- */
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    // Skip if editing text
+                    if (e.target.getAttribute('contenteditable') === 'true') return;
+
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' ||
+                        e.key === ' ' || e.key === 'PageDown') {
+                        e.preventDefault();
+                        this.nextSlide();
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' ||
+                               e.key === 'PageUp') {
+                        e.preventDefault();
+                        this.prevSlide();
+                    } else if (e.key === 'Home') {
+                        e.preventDefault();
+                        this.showSlide(0);
+                    } else if (e.key === 'End') {
+                        e.preventDefault();
+                        this.showSlide(this.slides.length - 1);
+                    }
+                });
+            }
+
+            /* --- Touch / Swipe Navigation --- */
+            setupTouchNav() {
+                let touchStartX = 0;
+                let touchStartY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    const dx = e.changedTouches[0].clientX - touchStartX;
+                    const dy = e.changedTouches[0].clientY - touchStartY;
+                    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                        if (dx < 0) this.nextSlide();
+                        else this.prevSlide();
+                    }
+                });
+            }
+
+            /* --- Mouse Wheel --- */
+            setupMouseWheel() {
+                let wheelTimeout;
+                document.addEventListener('wheel', (e) => {
+                    if (wheelTimeout) return;
+                    wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 800);
+                    if (e.deltaY > 0) this.nextSlide();
+                    else if (e.deltaY < 0) this.prevSlide();
+                }, { passive: true });
+            }
+
+            /* --- Progress Dots --- */
+            setupProgressDots() {
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('div');
+                    dot.className = 'progress-dot';
+                    dot.addEventListener('click', () => this.showSlide(i));
+                    this.progressDots.appendChild(dot);
+                });
+            }
+
+            updateProgressDots() {
+                const dots = this.progressDots.querySelectorAll('.progress-dot');
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
+
+            /* --- Slide Switching --- */
+            showSlide(index) {
+                this.currentSlide = Math.max(0, Math.min(index, this.slides.length - 1));
+                this.slides.forEach((slide, i) => {
+                    const isActive = i === this.currentSlide;
+                    slide.classList.toggle('active', isActive);
+                    slide.classList.toggle('visible', isActive);
+                });
+                this.updateProgressDots();
+            }
+
+            nextSlide() {
+                if (this.currentSlide < this.slides.length - 1) {
+                    this.showSlide(this.currentSlide + 1);
+                }
+            }
+
+            prevSlide() {
+                if (this.currentSlide > 0) {
+                    this.showSlide(this.currentSlide - 1);
+                }
+            }
+
+            hideNavHintAfterDelay() {
+                setTimeout(() => {
+                    this.navHint.style.opacity = '0';
+                }, 5000);
+            }
+        }
+
+        /* ===========================================
+           INLINE EDITING
+           =========================================== */
+        class InlineEditor {
+            constructor() {
+                this.isActive = false;
+                this.editToggle = document.getElementById('editToggle');
+                this.hotzone = document.querySelector('.edit-hotzone');
+                this.originalContent = new Map();
+                this.hideTimeout = null;
+
+                this.setupHotzoneHover();
+                this.setupHotzoneClick();
+                this.setupToggleClick();
+                this.setupKeyboardShortcut();
+                this.setupSaveShortcut();
+                this.loadFromStorage();
+            }
+
+            setupHotzoneHover() {
+                this.hotzone.addEventListener('mouseenter', () => {
+                    clearTimeout(this.hideTimeout);
+                    this.editToggle.classList.add('show');
+                });
+                this.hotzone.addEventListener('mouseleave', () => {
+                    this.hideTimeout = setTimeout(() => {
+                        if (!this.isActive) this.editToggle.classList.remove('show');
+                    }, 400);
+                });
+                this.editToggle.addEventListener('mouseenter', () => {
+                    clearTimeout(this.hideTimeout);
+                });
+                this.editToggle.addEventListener('mouseleave', () => {
+                    this.hideTimeout = setTimeout(() => {
+                        if (!this.isActive) this.editToggle.classList.remove('show');
+                    }, 400);
+                });
+            }
+
+            setupHotzoneClick() {
+                this.hotzone.addEventListener('click', () => {
+                    this.toggleEditMode();
+                });
+            }
+
+            setupToggleClick() {
+                this.editToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleEditMode();
+                });
+            }
+
+            setupKeyboardShortcut() {
+                document.addEventListener('keydown', (e) => {
+                    if ((e.key === 'e' || e.key === 'E') &&
+                        !e.target.getAttribute('contenteditable') &&
+                        !e.target.matches('input, textarea, select')) {
+                        this.toggleEditMode();
+                    }
+                });
+            }
+
+            setupSaveShortcut() {
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        this.saveToStorage();
+                    }
+                });
+            }
+
+            toggleEditMode() {
+                this.isActive = !this.isActive;
+                const editables = document.querySelectorAll('[data-editable]');
+
+                if (this.isActive) {
+                    this.editToggle.classList.add('active');
+                    this.editToggle.textContent = '✓';
+                    editables.forEach(el => {
+                        this.originalContent.set(el, el.innerHTML);
+                        el.setAttribute('contenteditable', 'true');
+                        el.style.outline = '1px dashed rgba(232,156,177,0.4)';
+                        el.style.cursor = 'text';
+                    });
+                } else {
+                    this.editToggle.classList.remove('active');
+                    this.editToggle.textContent = '✎';
+                    editables.forEach(el => {
+                        el.setAttribute('contenteditable', 'false');
+                        el.style.outline = '';
+                        el.style.cursor = '';
+                    });
+                    this.saveToStorage();
+                }
+            }
+
+            saveToStorage() {
+                const editables = document.querySelectorAll('[data-editable]');
+                const data = {};
+                editables.forEach((el, i) => {
+                    data[i] = el.innerHTML;
+                });
+                localStorage.setItem('khc-slides-content', JSON.stringify(data));
+            }
+
+            loadFromStorage() {
+                const raw = localStorage.getItem('khc-slides-content');
+                if (!raw) return;
+                try {
+                    const data = JSON.parse(raw);
+                    const editables = document.querySelectorAll('[data-editable]');
+                    editables.forEach((el, i) => {
+                        if (data[i] !== undefined) {
+                            el.innerHTML = data[i];
+                        }
+                    });
+                } catch (e) { /* ignore */ }
+            }
+        }
+
+        /* ===========================================
+           INIT
+           =========================================== */
+        const presentation = new SlidePresentation();
+        const editor = new InlineEditor();
+    </script>
+</body>
+</html>
