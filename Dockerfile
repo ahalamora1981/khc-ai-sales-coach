@@ -1,24 +1,19 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
-# Copy dependency files first for better caching
+# Install uv
+RUN pip install uv
+
+# Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Copy application code and data
-COPY .streamlit/ .streamlit/
-COPY data/ data/
-COPY sample-menus/ sample-menus/
-COPY app.py main.py ./
+# Install dependencies
+RUN uv sync --no-dev
 
-# Install production dependencies
-RUN uv sync --frozen --no-dev
+# Copy application
+COPY . .
 
-# Expose Streamlit default port
 EXPOSE 8501
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD uv run python -c "import urllib.request; urllib.request.urlopen('http://localhost:8501/ai-sales-coach/_stcore/health')" || exit 1
-
-CMD ["uv", "run", "streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["uv", "run", "streamlit", "run", "app.py", "--server.headless", "true", "--server.port", "8501", "--server.address", "0.0.0.0"]
